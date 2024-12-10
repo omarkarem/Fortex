@@ -8,6 +8,13 @@ const UserSchema = new mongoose.Schema({
     Password: {type: String, required: true },
     Type: {type: String, required: true },
     PhoneNumber: { type: String }, // Optional phone number field
+    bookings: [
+      {
+        propertyId: String,
+        amount: Number,
+        date: Date,
+      },
+    ],
 })
 
 const User = mongoose.model('User', UserSchema);

@@ -29,7 +29,6 @@ const PropertyPage = () => {
 
 
 
-//payment (handle rentnow)
   const handleRentNow = async () => {
     try {
       const response = await fetch("https://fortexserver.vercel.app/payment/create-payment-intent", {
@@ -37,18 +36,21 @@ const PropertyPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ amount: 5000 }), // Amount in cents (e.g., $50.00)
+        body: JSON.stringify({ 
+          amount: property.price * 100, // Amount in cents
+          userId: "USER_ID_HERE", // Replace with actual user ID from context or state
+        }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         const stripe = await stripePromise;
-
+  
         const result = await stripe.redirectToCheckout({
           sessionId: data.clientSecret,
         });
-
+  
         if (result.error) {
           alert(result.error.message);
         }
@@ -60,6 +62,8 @@ const PropertyPage = () => {
       alert("An error occurred. Please try again.");
     }
   };
+
+  
   // Fetch property details
   useEffect(() => {
     const fetchProperty = async () => {

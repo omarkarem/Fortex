@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import Property from "./models/Property.js";
 import propertyRoutes from "./routes/PropertiesRoutes.js"
 import userRoutes from "./routes/UserRoutes.js"
+import paymentRoutes from "./routes/PaymentRoutes.js"
 dotenv.config({
     path:'./config/.env'
 });
@@ -39,6 +40,9 @@ app.use("/auth",authRoutes);
 app.use("/properties", propertyRoutes);
 
 app.use("/user", userRoutes); // Add user routes under "/user"
+
+//payment routes
+app.use("/payment", paymentRoutes);
 
 connectDB();
 
