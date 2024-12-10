@@ -28,6 +28,11 @@ app.use(bodyParser.json());
 
 
 //Routes
+
+app.get("/", (req, res) => {
+    res.status(200).json({ message: "API is running" });
+  });
+  
 app.use("/auth",authRoutes);
 
 app.use("/properties", propertyRoutes);
