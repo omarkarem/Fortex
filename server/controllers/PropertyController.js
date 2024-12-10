@@ -153,21 +153,23 @@ export const getPropertyById = async (req, res) => {
 export const getRecommendations = async (req, res) => {
   try {
       const { price } = req.query;
+
       if (!price) {
           return res.status(400).json({ message: "Price is required" });
       }
 
-      // Find 4 properties within a similar price range (+/- 20%)
-      const minPrice = price * 0.5;
-      const maxPrice = price * 1.5;
+      // Find properties within 20% of the given price
+      const minPrice = price * 0.8;
+      const maxPrice = price * 1.2;
 
       const recommendations = await Property.find({
           price: { $gte: minPrice, $lte: maxPrice },
-      }).limit(4);
+      }).limit(4); // Limit to 4 recommendations
 
       res.status(200).json(recommendations);
   } catch (error) {
       console.error("Error fetching recommendations:", error);
-      res.status(500).json({ message: "Error fetching recommendations" });
+      res.status(500).json({ message: "Error fetching recommendations", error });
   }
 };
+
