@@ -18,7 +18,7 @@
             "headers": [
                 {
                     "key": "Access-Control-Allow-Origin",
-                    "value": "https://fortex-llc.vercel.app" // Replace with your frontend domain
+                    "value": "https://fortex-llc.vercel.app"
                 },
                 {
                     "key": "Access-Control-Allow-Methods",
