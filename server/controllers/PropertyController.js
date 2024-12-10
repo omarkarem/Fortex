@@ -151,16 +151,23 @@ export const getPropertyById = async (req, res) => {
 
 // Fetch recommendations based on price
 export const getRecommendations = async (req, res) => {
-  const { price } = req.query;
   try {
+      const { price } = req.query;
+      if (!price) {
+          return res.status(400).json({ message: "Price is required" });
+      }
+
+      // Find 4 properties within a similar price range (+/- 20%)
+      const minPrice = price * 0.8;
+      const maxPrice = price * 1.2;
+
       const recommendations = await Property.find({
-          price: { $lte: parseInt(price) + 1000, $gte: parseInt(price) - 1000 },
-      })
-          .limit(4)
-          .exec();
+          price: { $gte: minPrice, $lte: maxPrice },
+      }).limit(4);
+
       res.status(200).json(recommendations);
   } catch (error) {
       console.error("Error fetching recommendations:", error);
-      res.status(500).json({ message: "Failed to fetch recommendations", error });
+      res.status(500).json({ message: "Error fetching recommendations" });
   }
 };
