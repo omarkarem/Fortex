@@ -6,29 +6,36 @@ import jwt from "jsonwebtoken"
 const secretKey = process.env.JWT_SECRET || "Secret_key";
 
 
-//Registration
-export const register = async (req,res) =>{
-    console.log("Register endpoint hit with data:", req.body); // Debugging log
-    const {FirstName, LastName, Email, Password, Type} = req.body;
-    try {
-        const existingUser = await User.findOne({Email});
-        if(existingUser){
-            return res.status(400).json({message:"email already in use"});
-        }
-        const hashedPassword = await bcrypt.hash(Password,10);
-        const newUser = new User({
-            Email,
-            FirstName,
-            LastName,
-            Email, Password:hashedPassword,
-            Type,
-        });
-        await newUser.save();
-        res.status(201).json({message:"User registered successfully"});
-    } catch (error) {
-        res.status(500).json({message:"error registering user",error});
+// Registration
+export const register = async (req, res) => {
+    const errors = validationResult(req); // Check validation errors
+    if (!errors.isEmpty()) {
+      // Return validation errors to the frontend
+      return res.status(400).json({ errors: errors.array() });
     }
-};
+  
+    const { FirstName, LastName, Email, Password, Type } = req.body;
+    try {
+      const existingUser = await User.findOne({ Email });
+      if (existingUser) {
+        return res.status(400).json({ errors: [{ msg: "Email already in use", param: "Email" }] });
+      }
+  
+      const hashedPassword = await bcrypt.hash(Password, 10);
+      const newUser = new User({
+        FirstName,
+        LastName,
+        Email,
+        Password: hashedPassword,
+        Type,
+      });
+      await newUser.save();
+      res.status(201).json({ message: "User registered successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Error registering user", error });
+    }
+  };
+  
 
 //Loogin
 export const login = async (req,res) =>{
