@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = ()=>{
 
-    
+    const [validationErrors, setValidationErrors] = useState([]); // Server-side errors
 
     const [formData, setFormData] = useState({
         FirstName: "",
