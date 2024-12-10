@@ -38,3 +38,5 @@ app.use("/user", userRoutes); // Add user routes under "/user"
 app.use((req, res) => {
     res.status(404).json({ message: "Route not found" });
   });
+
+export default app;
