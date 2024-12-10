@@ -38,34 +38,32 @@ const DashListings = ()=>{
     },[]);
 
 
-    const handleAddProperty = async (e) => {
-        e.preventDefault();
-        console.log("Adding property with data:", newProperty); // Log the payload being sent
-    
-        try {
-            const response = await fetch("https://fortexserver.vercel.app/properties", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify(newProperty),
-            });
-    
-            if (response.ok) {
-                const addedProperty = await response.json();
-                setProperties((prev) => [...prev, addedProperty.property]); // Add new property to list
-                setAddModal(false); // Close modal
-                alert("Property added successfully!");
-            } else {
-                const errorData = await response.json();
-                console.error("Backend error:", errorData); // Log backend error response
-                alert("Failed to add property");
-            }
-        } catch (error) {
-            console.error("Error adding property:", error); // Log general errors
-        }
-    };
+    // Add Property Handler
+const handleAddProperty = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await fetch("https://fortexserver.vercel.app/properties", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(newProperty),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      setProperties((prev) => [...prev, data.property]);
+      setAddModal(false); // Close modal
+      alert("Property added successfully!");
+    } else {
+      // Display validation errors
+      alert(data.message);
+    }
+  } catch (error) {
+    console.error("Error adding property:", error);
+  }
+};
     
 
     const handleDelete = async (id)=>{
@@ -88,36 +86,39 @@ const DashListings = ()=>{
     };
 
 
-    const handleEdit = async (e) => {
-        e.preventDefault();
-        try {
-          const response = await fetch(
-            `https://fortexserver.vercel.app/properties/${selectedProperty._id}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              body: JSON.stringify(selectedProperty),
-            }
-          );
-          if (response.ok) {
-            const updatedProperty = await response.json();
-            setProperties((prev) =>
-              prev.map((property) =>
-                property._id === updatedProperty._id ? updatedProperty : property
-              )
-            );
-            setEdit(false);
-            alert("Property updated successfully");
-          } else {
-            alert("Failed to update property");
-          }
-        } catch (error) {
-          console.error("Error updating property:", error);
-        }
-      };
+    // Edit Property Handler
+const handleEdit = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await fetch(
+      `https://fortexserver.vercel.app/properties/${selectedProperty._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(selectedProperty),
+      }
+    );
+
+    const data = await response.json();
+    if (response.ok) {
+      setProperties((prev) =>
+        prev.map((property) =>
+          property._id === data.property._id ? data.property : property
+        )
+      );
+      setEdit(false);
+      alert("Property updated successfully!");
+    } else {
+      // Display validation errors
+      alert(data.message);
+    }
+  } catch (error) {
+    console.error("Error updating property:", error);
+  }
+};
 
     return(
         <section className="flex flex-col w-95 mx-auto font-pop">
