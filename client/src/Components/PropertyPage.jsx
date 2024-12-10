@@ -9,7 +9,7 @@ import book from "../assets/PayDate.svg";
 import Property from "../Components/Property";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe("pk_test_51QUYDoIi56ujtN3Bj53eao4zvEschp1hMmetQ0miEpKB87QQRbxbkterhmKnLpOI4CMfrdPPcRLAj1fwT41rY0Ed00pJRCVHDQ");
+const stripePromise = loadStripe("pk_test_51QUYDoIi56ujtN3BtgsB8bfJr1irDxjmCVozDTQCBW8wWNfbPVw4xMR98DmRALmYl6Y4SzIEbose0vavvm6kbPF500sNG2xJMk");
 
 
 const PropertyPage = () => {
