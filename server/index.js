@@ -15,14 +15,14 @@ dotenv.config({
 const PORT = process.env.PORT;
 const app = express();
 
-app.use(cors());
+app.use(
+    cors({
+      origin: ["https://fortex-llc.vercel.app"], // Replace with your frontend domain
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
 
-// app.use(cors({
-//     origin: "*", // Frontend origin
-//     methods: ["GET", "POST", "PUT", "DELETE"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//   }));
-  
 //Middleware
 app.use(bodyParser.json());
 
@@ -32,13 +32,15 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => {
     res.status(200).json({ message: "API is running" });
   });
-  
+
 app.use("/auth",authRoutes);
 
 app.use("/properties", propertyRoutes);
 
 app.use("/user", userRoutes); // Add user routes under "/user"
 
+// Connect to the database
+connectDB();
 
 app.use((req, res) => {
     res.status(404).json({ message: "Route not found" });
