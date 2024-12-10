@@ -16,31 +16,32 @@ const PropertyPage = () => {
     // Fetch property details
     useEffect(() => {
         const fetchProperty = async () => {
-            try {
-                const response = await fetch(`https://fortexserver.vercel.app/properties/${id}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch property details");
-                }
-                const data = await response.json();
-                setProperty(data);
-
-                // Fetch recommendations
-                const recResponse = await fetch(
-                    `https://fortexserver.vercel.app/properties/recommendations?price=${data.price}`
-                );
-                const recData = await recResponse.json();
-                setRecommendations(recData);
-            } catch (error) {
-                console.error("Error fetching property:", error);
+          try {
+            const response = await fetch(`https://fortexserver.vercel.app/properties/${id}`);
+            if (!response.ok) {
+              console.error("Failed to fetch property details");
+              return;
             }
+            const data = await response.json();
+            setProperty(data);
+      
+            // Fetch recommendations
+            const recResponse = await fetch(
+              `https://fortexserver.vercel.app/properties/recommendations?price=${data.price}`
+            );
+            if (!recResponse.ok) {
+              console.error("Failed to fetch recommendations");
+              return;
+            }
+            const recData = await recResponse.json();
+            setRecommendations(recData);
+          } catch (error) {
+            console.error("Error fetching property or recommendations:", error);
+          }
         };
-
+      
         fetchProperty();
-    }, [id]);
-
-    if (!property) {
-        return <p>Loading...</p>;
-    }
+      }, [id]);
 
   return (
     <>
@@ -53,7 +54,7 @@ const PropertyPage = () => {
           <div className="flex flex-col w-55 pr-24">
             <p className="text-36 font-medium leading-36 pr-20">{property.location}</p>
             <p className="text-24 font-semibold my-4">Description</p>
-            <p className="text-24 leading-24">{property.description}</p>
+            <p className="text-24 leading-24">{property?.description || "No description available"}</p>
           </div>
           <div className="flex flex-col border-2 w-45 my-2 rounded-md p-14">
             <p className="text-18">
@@ -89,9 +90,22 @@ const PropertyPage = () => {
           <p>Our Recommendations</p>
         </div>
         <div className="flex flex-wrap">
-          {recommendations.map((rec) => (
-            <Property key={rec._id} property={rec} />
-          ))}
+          {Array.isArray(recommendations) && recommendations.length > 0 ? (
+            recommendations.map((rec) => (
+              <Property
+                key={rec._id}
+                location={rec.location}
+                bedrooms={rec.bedrooms}
+                bathrooms={rec.bathrooms}
+                price={rec.price}
+                type={rec.type}
+                size={rec.size}
+                image={rec.image}
+              />
+            ))
+          ) : (
+            <p>No recommendations available.</p>
+          )}
         </div>
       </section>
       <Footer />

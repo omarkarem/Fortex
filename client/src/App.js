@@ -19,7 +19,7 @@ function App() {
         <Route path="/properties" element={<ProtectedRoute requiredType="Renter"><Properties /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute requiredType="Owner"><Dashboard /></ProtectedRoute>} />
         <Route path="/renter/dashboard" element={<ProtectedRoute requiredType="Renter"><RenterProfile/></ProtectedRoute>} />
-        <Route path="/property" Component={PropertyPage}/>
+        <Route path="/property/:id" element={<PropertyPage />} />
       </Routes>
     </Router>
   );
