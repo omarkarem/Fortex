@@ -43,20 +43,28 @@ const Signup = () => {
         },
         body: JSON.stringify(formData),
       });
-
+  
       const data = await response.json();
+  
       if (response.ok) {
         alert("User registered successfully");
         navigate("/login");
       } else {
-        // Display validation errors
-        setValidationErrors(data.errors || []);
+        // Convert errors array into an object for easier access
+        const errorObj = {};
+        if (data.errors) {
+          data.errors.forEach((error) => {
+            errorObj[error.param] = error.msg;
+          });
+        }
+        setValidationErrors(errorObj); // Set validation errors
       }
     } catch (error) {
       console.error("Error during registration:", error);
       alert("An error occurred. Please try again.");
     }
   };
+  
 
   return (
     <section className="flex w-full h-screen font-pop">
@@ -108,69 +116,68 @@ const Signup = () => {
         <form onSubmit={handleSubmit} className="w-11/12 space-y-4">
           {/* Name Fields */}
           <div className="flex space-x-4">
-            <div className="flex flex-col w-49 space-y-2">
-              <label className="text-13 text-greyL">First Name</label>
-              <input
-                name="FirstName"
-                value={formData.FirstName}
-                onChange={handleChange}
-                placeholder="Enter your First Name"
-                type="text"
-                className="bg-superLgrey h-12 rounded-xl px-5"
-              />
-              {validationErrors.FirstName && (
-                <p className="text-red-500 text-sm">{validationErrors.FirstName}</p>
-              )}
-            </div>
-            <div className="flex flex-col w-49 space-y-2">
-              <label className="text-13 text-greyL">Last Name</label>
-              <input
-                name="LastName"
-                value={formData.LastName}
-                onChange={handleChange}
-                placeholder="Enter your Last Name"
-                type="text"
-                className="bg-superLgrey h-12 rounded-xl px-5"
-              />
-              {validationErrors.LastName && (
-                <p className="text-red-500 text-sm">{validationErrors.LastName}</p>
-              )}
-            </div>
-          </div>
-          {/* Email Field */}
-          <div className="flex flex-col w-full space-y-2">
-            <label className="text-13 text-greyL">Email</label>
-            <input
-              name="Email"
-              value={formData.Email}
-              onChange={handleChange}
-              placeholder="Enter Your Email"
-              type="email"
-              className="bg-superLgrey h-12 rounded-xl px-5"
-            />
-            {validationErrors.Email && <p className="text-red-500 text-sm">{validationErrors.Email}</p>}
-          </div>
-          {/* Password Field */}
-          <div className="flex space-x-4">
-            <div className="flex flex-col w-49 space-y-2">
-              <label className="text-13 text-greyL">Password</label>
-              <input
-                name="Password"
-                value={formData.Password}
-                onChange={handleChange}
-                placeholder="Enter your Password"
-                type="password"
-                className="bg-superLgrey h-12 rounded-xl px-5"
-              />
-              {validationErrors.Password && (
-                <p className="text-red-500 text-sm">{validationErrors.Password}</p>
-              )}
-            </div>
-            <div className="flex flex-col w-49 space-y-2">
-              <label className="text-13 text-greyL">What are you Looking to do?</label>
-              <ToggleSwitch onChange={(type) => handleUserTypeChange(type)} />
-            </div>
-          </div>
+  <div className="flex flex-col w-49 space-y-2">
+    <label className="text-13 text-greyL">First Name</label>
+    <input
+      name="FirstName"
+      value={formData.FirstName}
+      onChange={handleChange}
+      placeholder="Enter your First Name"
+      type="text"
+      className="bg-superLgrey h-12 rounded-xl px-5"
+    />
+    {validationErrors.FirstName && (
+      <p className="text-red-500 text-sm">{validationErrors.FirstName}</p>
+    )}
+  </div>
+  <div className="flex flex-col w-49 space-y-2">
+    <label className="text-13 text-greyL">Last Name</label>
+    <input
+      name="LastName"
+      value={formData.LastName}
+      onChange={handleChange}
+      placeholder="Enter your Last Name"
+      type="text"
+      className="bg-superLgrey h-12 rounded-xl px-5"
+    />
+    {validationErrors.LastName && (
+      <p className="text-red-500 text-sm">{validationErrors.LastName}</p>
+    )}
+  </div>
+</div>
+<div className="flex flex-col w-full space-y-2">
+  <label className="text-13 text-greyL">Email</label>
+  <input
+    name="Email"
+    value={formData.Email}
+    onChange={handleChange}
+    placeholder="Enter Your Email"
+    type="email"
+    className="bg-superLgrey h-12 rounded-xl px-5"
+  />
+  {validationErrors.Email && <p className="text-red-500 text-sm">{validationErrors.Email}</p>}
+</div>
+<div className="flex space-x-4">
+  <div className="flex flex-col w-49 space-y-2">
+    <label className="text-13 text-greyL">Password</label>
+    <input
+      name="Password"
+      value={formData.Password}
+      onChange={handleChange}
+      placeholder="Enter your Password"
+      type="password"
+      className="bg-superLgrey h-12 rounded-xl px-5"
+    />
+    {validationErrors.Password && (
+      <p className="text-red-500 text-sm">{validationErrors.Password}</p>
+    )}
+  </div>
+  <div className="flex flex-col w-49 space-y-2">
+    <label className="text-13 text-greyL">What are you Looking to do?</label>
+    <ToggleSwitch onChange={(type) => handleUserTypeChange(type)} />
+  </div>
+</div>
+
           <div>
             <button type="submit" className="bg-black text-white w-full h-12 rounded-full mt-5">
               Get Access Now
