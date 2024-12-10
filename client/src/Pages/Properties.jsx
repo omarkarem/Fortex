@@ -7,41 +7,36 @@ import Search from "../Components/Search";
 const Properties = ()=>{
     const [properties,setProperties] = useState([]);
 
-      // Function to fetch properties
-      const fetchProperties = async (search = "", filter = "All") => {
-        try {
-            const response = await fetch(
-                `https://fortexserver.vercel.app?search=${search}&filter=${filter}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
-                    },
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Failed to fetch properties");
-            }
-            const data = await response.json();
-            setProperties(data);
-        } catch (error) {
-            console.error("Error fetching properties:", error);
-        }
-    };
-    
-
-  // Fetch all properties on page load
+    // Fetch all properties on page load
   useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await fetch("https://fortexserver.vercel.app/properties/all", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch properties");
+        }
+
+        const data = await response.json();
+        setProperties(data);
+      } catch (error) {
+        console.error("Error fetching properties:", error);
+      }
+    };
+
     fetchProperties();
   }, []);
+
 
     return(
         <>
         <section className="w-11/12 mx-auto mb-12 bg-white flex flex-col justify-center font-pop">
             <Header />
-            <Search
-          onSearch={fetchProperties}
-          filters={["All", "Apartment", "Villa", "Studio"]}
-        />
+            <Search/>
         <div className="w-11/12 h-auto mx-auto flex flex-wrap overflow-hidden">
           {properties.map((property) => (
             <Property
