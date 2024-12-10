@@ -41,8 +41,6 @@ app.use("/properties", propertyRoutes);
 
 app.use("/user", userRoutes); // Add user routes under "/user"
 
-app.use("/api", paymentRoutes);
-// Connect to the database
 connectDB();
 
 app.use((req, res) => {
