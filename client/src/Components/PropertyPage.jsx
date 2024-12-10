@@ -7,6 +7,10 @@ import bath from "../assets/Shower.svg";
 import size from "../assets/Height.svg";
 import book from "../assets/PayDate.svg";
 import Property from "../Components/Property";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe("pk_test_51QUYDoIi56ujtN3Bj53eao4zvEschp1hMmetQ0miEpKB87QQRbxbkterhmKnLpOI4CMfrdPPcRLAj1fwT41rY0Ed00pJRCVHDQ");
+
 
 const PropertyPage = () => {
   const { id } = useParams();
@@ -23,6 +27,39 @@ const PropertyPage = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
+
+//payment (handle rentnow)
+  const handleRentNow = async () => {
+    try {
+      const response = await fetch("https://fortexserver.vercel.app/payment/create-payment-intent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: 5000 }), // Amount in cents (e.g., $50.00)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const stripe = await stripePromise;
+
+        const result = await stripe.redirectToCheckout({
+          sessionId: data.clientSecret,
+        });
+
+        if (result.error) {
+          alert(result.error.message);
+        }
+      } else {
+        alert(data.error || "Failed to initiate payment");
+      }
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+      alert("An error occurred. Please try again.");
+    }
+  };
   // Fetch property details
   useEffect(() => {
     const fetchProperty = async () => {
@@ -99,7 +136,7 @@ const PropertyPage = () => {
               ${property.price} / <span className="text-31 text-greyL font-normal">month</span>
             </div>
             <div className="flex">
-              <button className="bg-black px-36 py-4 text-white text-18 rounded-xl my-5">Rent Now</button>
+              <button onClick={handleRentNow} className="bg-black px-36 py-4 text-white text-18 rounded-xl my-5">Rent Now</button>
               <button className="bg-white ml-2 p-1">
                 <img className="border-2 p-3 rounded-xl" src={book} alt="Book" />
               </button>

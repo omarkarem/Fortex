@@ -12,7 +12,6 @@ router.get("/recommendations", getRecommendations);
 // Fetch single property by ID
 router.get("/:id", getPropertyById);
 
-
 // GET /properties - Fetch all user properties
 router.get("/", authenticateToken, getUserProperties);
 
