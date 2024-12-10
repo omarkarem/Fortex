@@ -1,4 +1,6 @@
 import Stripe from 'stripe';
+import User from '../models/User';
+import Property from '../models/Property';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createCheckoutSession = async (req, res) => {
@@ -47,26 +49,25 @@ export const stripeWebhook = async (req, res) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    console.error('Webhook signature verification failed:', err);
+    console.error('Webhook signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
 
-    // Extract metadata
     const userId = session.metadata.userId;
     const propertyId = session.metadata.propertyId;
 
     try {
-      // Update user bookings
+      // Update user's bookings
       await User.findByIdAndUpdate(
         userId,
         {
           $push: {
             bookings: {
               propertyId,
-              amount: session.amount_total / 100, // Convert to dollars
+              amount: session.amount_total / 100, // Convert cents to dollars
               date: new Date(),
             },
           },
@@ -74,10 +75,17 @@ export const stripeWebhook = async (req, res) => {
         { new: true }
       );
 
+      // Update property to set tenant
+      await Property.findByIdAndUpdate(
+        propertyId,
+        { tenantId: userId }, // Link property to tenant
+        { new: true }
+      );
+
       res.status(200).json({ received: true });
     } catch (error) {
-      console.error('Error updating user bookings:', error);
-      res.status(500).json({ error: 'Failed to update bookings' });
+      console.error('Error updating booking:', error.message);
+      res.status(500).json({ error: 'Failed to process booking' });
     }
   } else {
     res.status(400).json({ error: 'Unhandled event type' });

@@ -87,7 +87,7 @@ const RenterProfile = ()=>{
             <label className="block text-lg font-medium">Email</label>
             <input
               type="email"
-              value={email}
+              value={userData.Email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg bg-white"
             />
@@ -98,24 +98,29 @@ const RenterProfile = ()=>{
             <label className="block text-lg font-medium">Phone Number</label>
             <input
               type="text"
-              value={phone}
+              value={userData.PhoneNumber}
               onChange={(e) => setPhone(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg bg-white"
             />
           </div>
         </div>
-        {/*bookings*/}
-        <div>
-            <label className="block text-lg font-medium">Bookings</label>
-            <ul>
+        {/* Display Bookings */}
+        <div className="mt-6">
+          <h3 className="text-lg font-medium">Bookings</h3>
+          {userData.bookings.length > 0 ? (
+            <ul className="mt-4">
               {userData.bookings.map((booking, index) => (
-                <li key={index} className="my-2">
-                  Property ID: {booking.propertyId}, Amount: ${booking.amount}, Date:{" "}
-                  {new Date(booking.date).toLocaleDateString()}
+                <li key={index} className="border-b py-2">
+                  <p><strong>Property ID:</strong> {booking.propertyId}</p>
+                  <p><strong>Amount Paid:</strong> ${booking.amount}</p>
+                  <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()}</p>
                 </li>
               ))}
             </ul>
-          </div>
+          ) : (
+            <p className="mt-4 text-gray-500">No bookings yet.</p>
+          )}
+        </div>
         {/* Save Button */}
         <div className="mt-6 flex justify-end">
           <button
