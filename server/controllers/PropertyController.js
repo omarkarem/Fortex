@@ -134,3 +134,33 @@ export const updateProperty = async (req, res) => {
   };
   
 
+// Get a single property by ID
+export const getPropertyById = async (req, res) => {
+  const { id } = req.params;
+  try {
+      const property = await Property.findById(id);
+      if (!property) {
+          return res.status(404).json({ message: "Property not found" });
+      }
+      res.status(200).json(property);
+  } catch (error) {
+      console.error("Error fetching property:", error);
+      res.status(500).json({ message: "Failed to fetch property", error });
+  }
+};
+
+// Fetch recommendations based on price
+export const getRecommendations = async (req, res) => {
+  const { price } = req.query;
+  try {
+      const recommendations = await Property.find({
+          price: { $lte: parseInt(price) + 1000, $gte: parseInt(price) - 1000 },
+      })
+          .limit(4)
+          .exec();
+      res.status(200).json(recommendations);
+  } catch (error) {
+      console.error("Error fetching recommendations:", error);
+      res.status(500).json({ message: "Failed to fetch recommendations", error });
+  }
+};

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header";
 import Property from "../Components/Property";
 import Footer from "../Components/Footer";
@@ -6,6 +7,7 @@ import Search from "../Components/Search";
 
 const Properties = () => {
   const [properties, setProperties] = useState([]);
+  const navigate = useNavigate();
 
   const fetchProperties = async () => {
     try {
@@ -39,6 +41,7 @@ const Properties = () => {
         <div className="w-11/12 h-auto mx-auto flex flex-wrap overflow-hidden">
           {properties.map((property) => (
             <Property
+              onClick={() => navigate(`/property/${property._id}`)}
               key={property._id}
               location={property.location}
               bedrooms={property.bedrooms}
