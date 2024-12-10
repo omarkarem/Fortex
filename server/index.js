@@ -35,7 +35,6 @@ app.use("/properties", propertyRoutes);
 app.use("/user", userRoutes); // Add user routes under "/user"
 
 
-app.listen(PORT, async ()=>{
-    console.log(`server is running on http://localhost:${PORT}`)
-    await connectDB();
-});
+app.use((req, res) => {
+    res.status(404).json({ message: "Route not found" });
+  });
