@@ -16,7 +16,7 @@ const RenterProfile = ()=>{
       useEffect(() => {
         const fetchRenterData = async () => {
           try {
-            const response = await fetch("http://localhost:4000/user/profile", {
+            const response = await fetch("https://fortexserver.vercel.app/user/profile", {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
@@ -41,7 +41,7 @@ const RenterProfile = ()=>{
       const handleSave = async () => {
         setLoading(true);
         try {
-          const response = await fetch("http://localhost:4000/user/update", {
+          const response = await fetch("https://fortexserver.vercel.app/user/update", {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",

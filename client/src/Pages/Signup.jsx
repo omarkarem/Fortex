@@ -38,7 +38,7 @@ const Signup = ()=>{
         e.preventDefault();
         console.log("Form data being submitted:", formData); // Debugging log
         try {
-          const response = await fetch("http://localhost:4000/auth/register", {
+          const response = await fetch("https://fortexserver.vercel.app/auth/register", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

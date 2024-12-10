@@ -10,7 +10,7 @@ const DashHome = ()=>{
     // Fetch user properties
     const fetchUserProperties = async () => {
       try {
-        const response = await fetch("http://localhost:4000/properties", {
+        const response = await fetch("https://fortexserver.vercel.app/properties", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -36,7 +36,7 @@ const DashHome = ()=>{
     // Fetch Total Revenue
     const fetchTotalRevenue = async () => {
       try {
-        const response = await fetch("http://localhost:4000/properties/total-revenue", {
+        const response = await fetch("https://fortexserver.vercel.app/properties/total-revenue", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -55,7 +55,7 @@ const DashHome = ()=>{
     // Fetch Property Count
     const fetchPropertyCount = async () => {
       try {
-        const response = await fetch("http://localhost:4000/properties/property-count", {
+        const response = await fetch("https://fortexserver.vercel.app/properties/property-count", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

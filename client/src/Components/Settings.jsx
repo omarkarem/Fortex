@@ -15,7 +15,7 @@ const Settings = ()=>{
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/user/profile", {
+        const response = await fetch("https://fortexserver.vercel.app/user/profile", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -35,7 +35,7 @@ const Settings = ()=>{
   const handleEmailUpdate = async () => {
     try {
       setLoading(true); // Start loading
-      const response = await fetch("http://localhost:4000/user/update-email", {
+      const response = await fetch("https://fortexserver.vercel.app/user/update-email", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const Settings = ()=>{
   // Handle Account Deletion
   const handleDeleteAccount = async () => {
     try {
-      const response = await fetch("http://localhost:4000/user/delete", {
+      const response = await fetch("https://fortexserver.vercel.app/user/delete", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -23,7 +23,7 @@ const DashListings = ()=>{
     useEffect(()=>{
         const fetchProperties = async ()=>{
             try {
-                const response = await fetch("http://localhost:4000/properties",{
+                const response = await fetch("https://fortexserver.vercel.app/properties",{
                     headers:{
                         Authorization: `Bearer ${localStorage.getItem("token")}`, 
                     },
@@ -43,7 +43,7 @@ const DashListings = ()=>{
         console.log("Adding property with data:", newProperty); // Log the payload being sent
     
         try {
-            const response = await fetch("http://localhost:4000/properties", {
+            const response = await fetch("https://fortexserver.vercel.app/properties", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -70,7 +70,7 @@ const DashListings = ()=>{
 
     const handleDelete = async (id)=>{
         try {
-            const response = await fetch(`http://localhost:4000/properties/${id}`,{
+            const response = await fetch(`https://fortexserver.vercel.app/properties/${id}`,{
                 method:"DELETE",
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -92,7 +92,7 @@ const DashListings = ()=>{
         e.preventDefault();
         try {
           const response = await fetch(
-            `http://localhost:4000/properties/${selectedProperty._id}`,
+            `https://fortexserver.vercel.app/properties/${selectedProperty._id}`,
             {
               method: "PUT",
               headers: {

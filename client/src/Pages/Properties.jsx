@@ -11,7 +11,7 @@ const Properties = ()=>{
       const fetchProperties = async (search = "", filter = "All") => {
         try {
             const response = await fetch(
-                `http://localhost:4000/properties?search=${search}&filter=${filter}`,
+                `https://fortexserver.vercel.app?search=${search}&filter=${filter}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token

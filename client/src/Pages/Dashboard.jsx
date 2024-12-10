@@ -17,7 +17,7 @@ const Dashboard = ()=>{
     useEffect(() => {
         const fetchUserData = async () => {
           try {
-            const response = await fetch("http://localhost:4000/user/profile", {
+            const response = await fetch("https://fortexserver.vercel.app/user/profile", {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
