@@ -10,40 +10,59 @@ import Property from "../Components/Property";
 
 const PropertyPage = () => {
   const { id } = useParams();
-  const [property, setProperty] = useState(null);
+  const [property, setProperty] = useState({
+    location: "",
+    description: "",
+    ownerName: "",
+    bedrooms: 0,
+    bathrooms: 0,
+    size: 0,
+    price: 0,
+    image: "",
+  });
   const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    // Fetch property details
-    useEffect(() => {
-        const fetchProperty = async () => {
-          try {
-            // Fetch the main property details
-            const response = await fetch(`https://fortexserver.vercel.app/properties/${id}`);
-            if (!response.ok) {
-              console.error("Failed to fetch property details");
-              return;
-            }
-            const data = await response.json();
-            setProperty(data);
-      
-            // Fetch recommendations based on price
-            const recResponse = await fetch(
-              `https://fortexserver.vercel.app/properties/recommendations?price=${data.price}`
-            );
-            if (!recResponse.ok) {
-              console.error("Failed to fetch recommendations");
-              return;
-            }
-            const recData = await recResponse.json();
-            setRecommendations(recData);
-          } catch (error) {
-            console.error("Error fetching property or recommendations:", error);
-          }
-        };
-      
-        fetchProperty();
-      }, [id]);
-      
+  // Fetch property details
+  useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        // Fetch property details
+        const response = await fetch(`https://fortexserver.vercel.app/properties/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch property details");
+        }
+        const data = await response.json();
+        setProperty(data);
+
+        // Fetch recommendations based on property price
+        const recResponse = await fetch(
+          `https://fortexserver.vercel.app/properties/recommendations?price=${data.price}`
+        );
+        if (!recResponse.ok) {
+          throw new Error("Failed to fetch recommendations");
+        }
+        const recData = await recResponse.json();
+        setRecommendations(recData);
+      } catch (error) {
+        console.error("Error fetching property or recommendations:", error);
+      } finally {
+        setLoading(false); // Set loading to false after API calls
+      }
+    };
+
+    fetchProperty();
+  }, [id]);
+
+  // Render loading state
+  if (loading) {
+    return (
+      <div className="text-center mt-20">
+        <p>Loading property details...</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <Header />
@@ -55,7 +74,7 @@ const PropertyPage = () => {
           <div className="flex flex-col w-55 pr-24">
             <p className="text-36 font-medium leading-36 pr-20">{property.location}</p>
             <p className="text-24 font-semibold my-4">Description</p>
-            <p className="text-24 leading-24">{property?.description || "No description available"}</p>
+            <p className="text-24 leading-24">{property.description}</p>
           </div>
           <div className="flex flex-col border-2 w-45 my-2 rounded-md p-14">
             <p className="text-18">
@@ -91,7 +110,7 @@ const PropertyPage = () => {
           <p>Our Recommendations</p>
         </div>
         <div className="flex flex-wrap">
-          {Array.isArray(recommendations) && recommendations.length > 0 ? (
+          {recommendations.length > 0 ? (
             recommendations.map((rec) => (
               <Property
                 key={rec._id}
