@@ -58,29 +58,27 @@ export const stripeWebhook = async (req, res) => {
 
     const userId = session.metadata.userId;
     const propertyId = session.metadata.propertyId;
+    const amount = session.amount_total / 100; // Convert cents to dollars
 
     try {
-      // Update user's bookings
-      await User.findByIdAndUpdate(
-        userId,
+      // Call the new endpoint to update bookings and property tenant
+      const response = await fetch(
+        'https://fortexserver.vercel.app/user/update-bookings',
         {
-          $push: {
-            bookings: {
-              propertyId,
-              amount: session.amount_total / 100, // Convert cents to dollars
-              date: new Date(),
-            },
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.INTERNAL_API_TOKEN}`, // Use a secure token if this is an internal request
           },
-        },
-        { new: true }
+          body: JSON.stringify({ userId, propertyId, amount }),
+        }
       );
 
-      // Update property to set tenant
-      await Property.findByIdAndUpdate(
-        propertyId,
-        { tenantId: userId }, // Link property to tenant
-        { new: true }
-      );
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Error updating booking:', error.message);
+        return res.status(500).json({ error: 'Failed to process booking' });
+      }
 
       res.status(200).json({ received: true });
     } catch (error) {

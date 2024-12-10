@@ -69,4 +69,49 @@ export const updateUserProfile = async (req, res) => {
       res.status(500).json({ message: "Failed to update profile", error });
     }
   };
+
+  export const updateUserBookings = async (req, res) => {
+    const { userId, propertyId, amount } = req.body; // User, property, and payment details
+  
+    try {
+      // Find the user and update their bookings
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: {
+            bookings: {
+              propertyId,
+              amount,
+              date: new Date(), // Current date
+            },
+          },
+        },
+        { new: true } // Return the updated user document
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Update the property with the tenant ID
+      const updatedProperty = await Property.findByIdAndUpdate(
+        propertyId,
+        { tenantId: userId }, // Link the tenant to the property
+        { new: true } // Return the updated property document
+      );
+  
+      if (!updatedProperty) {
+        return res.status(404).json({ message: 'Property not found' });
+      }
+  
+      res.status(200).json({
+        message: 'Booking updated successfully',
+        user: updatedUser,
+        property: updatedProperty,
+      });
+    } catch (error) {
+      console.error('Error updating booking and property:', error.message);
+      res.status(500).json({ error: 'Failed to update booking and property' });
+    }
+  };
   

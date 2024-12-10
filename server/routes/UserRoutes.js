@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserProfile, updateEmail, deleteUser, updateUserProfile } from "../controllers/UserController.js";
+import { getUserProfile, updateEmail, deleteUser, updateUserProfile , updateUserBookings} from "../controllers/UserController.js";
 import { authenticateToken } from "../Middleware/authMiddleware.js";
 import { body } from "express-validator";
 import validationMiddleware from "../Middleware/validationMiddleware.js";
@@ -37,5 +37,8 @@ router.put(
 
 // Delete User
 router.delete("/delete", authenticateToken, deleteUser);
+
+
+router.post('/update-bookings', authenticateToken, updateUserBookings);
 
 export default router;

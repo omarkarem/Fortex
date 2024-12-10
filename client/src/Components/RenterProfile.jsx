@@ -22,9 +22,10 @@ const RenterProfile = ()=>{
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
             });
-    
+      
             if (response.ok) {
               const data = await response.json();
+              console.log('Fetched User Data:', data);
               setUserData(data);
             } else {
               console.error("Failed to fetch profile data.");
@@ -33,7 +34,7 @@ const RenterProfile = ()=>{
             console.error("Error fetching renter data:", error);
           }
         };
-    
+      
         fetchRenterData();
       }, []);
     
