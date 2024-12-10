@@ -17,7 +17,7 @@ const app = express();
 
 
 app.use(cors({
-    origin: "http://localhost:3000", // Frontend origin
+    origin: "https://fortex-llc.vercel.app", // Frontend origin
     credentials: true,
   }));
   
