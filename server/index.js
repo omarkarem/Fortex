@@ -15,13 +15,13 @@ dotenv.config({
 const PORT = process.env.PORT;
 const app = express();
 
-// app.use(cors());
+app.use(cors());
 
-app.use(cors({
-    origin: "*", // Frontend origin
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }));
+// app.use(cors({
+//     origin: "*", // Frontend origin
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   }));
   
 //Middleware
 app.use(bodyParser.json());
