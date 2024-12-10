@@ -6,12 +6,12 @@ const router = express.Router();
 
 // GET /properties - Fetch all properties
 router.get("/all", getProperties);
+// Fetch recommendations
+router.get("/recommendations", getRecommendations);
 
 // Fetch single property by ID
 router.get("/:id", getPropertyById);
 
-// Fetch recommendations
-router.get("/recommendations", getRecommendations);
 
 // GET /properties - Fetch all user properties
 router.get("/", authenticateToken, getUserProperties);

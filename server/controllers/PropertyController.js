@@ -166,8 +166,8 @@ export const getRecommendations = async (req, res) => {
         }
 
         // Calculate price range for recommendations (e.g., ±20% of given price)
-        const minPrice = parsedPrice * 0.8;
-        const maxPrice = parsedPrice * 1.2;
+        const minPrice = parsedPrice * 0.5;
+        const maxPrice = parsedPrice * 1.5;
 
         // Fetch properties within the price range and limit to 4 results
         const recommendations = await Property.find({
