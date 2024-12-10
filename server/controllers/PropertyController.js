@@ -150,8 +150,6 @@ export const getPropertyById = async (req, res) => {
 };
 
 // Fetch recommendations based on price
-// Controller logic for getting recommendations
-import Property from "../models/Property.js";
 
 export const getRecommendations = async (req, res) => {
     try {
