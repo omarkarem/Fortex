@@ -1,23 +1,23 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import LogoB from "../assets/blackLogo.svg";
 import Check from "../assets/CheckMark.svg";
 import Log from "../assets/ForwardButton.svg";
 import ToggleSwitch from "../Components/Switch";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const [validationErrors, setValidationErrors] = useState({}); // Server-side validation errors
+  const [validationErrors, setValidationErrors] = useState({}); // Server-side errors
+
   const [formData, setFormData] = useState({
     FirstName: "",
     LastName: "",
     Email: "",
     Password: "",
-    Type: "Owner", // Default user type
+    Type: "Owner", // Default value from ToggleSwitch
   });
 
   const navigate = useNavigate();
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -26,7 +26,6 @@ const Signup = () => {
     }));
   };
 
-  // Handle toggle switch changes for user type
   const handleUserTypeChange = (type) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -34,7 +33,7 @@ const Signup = () => {
     }));
   };
 
-  // Submit form data
+  // Fetching /auth/register endpoint to register user
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -50,21 +49,17 @@ const Signup = () => {
       );
 
       const data = await response.json();
-
       if (response.ok) {
         alert("User registered successfully");
-        setValidationErrors({}); // Clear errors on success
         navigate("/login");
       } else {
-        // Log validation errors from server
-        console.log("Validation Errors Received:", data.errors);
-
-        // Map validation errors to form fields
+        // Display validation errors
         const errorObj = {};
-        data.errors.forEach((error) => {
-          errorObj[error.param] = error.msg;
-        });
-
+        if (data.errors) {
+          data.errors.forEach((error) => {
+            errorObj[error.param] = error.msg; // Map field name to its error message
+          });
+        }
         setValidationErrors(errorObj); // Update state with errors
       }
     } catch (error) {
@@ -75,31 +70,61 @@ const Signup = () => {
 
   return (
     <section className="flex w-full h-screen font-pop">
-      {/* Left Section */}
       <div className="flex-col w-45 pt-28 pl-24 bg-lightblue">
         <img src={LogoB} alt="Black Fortex Logo" />
         <p className="text-black font-normal text-20 leading-20 mt-5 w-11/12">
-          Ready to find your dream home or rent out your property? Sign up today and take the next step!
+          Ready to find your dream home or rent out your property? Sign up today
+          and take the next step!
         </p>
-        {/* Features */}
-        {[ 
-          { title: "Seamless Search & Listing Experience", description: "Renters find their perfect home, and owners list properties with ease—all in one platform." },
-          { title: "Verified Listings & Secure Transactions", description: "Renters explore verified properties with confidence, while owners enjoy secure payments and lease management." },
-          { title: "24/7 Support for Renters and Owners", description: "Get real-time assistance for any needs—whether you’re searching for a home or managing a property." },
-        ].map((feature, idx) => (
-          <div className="flex my-14" key={idx}>
-            <div>
-              <img src={Check} alt="Check Mark" />
-            </div>
-            <div className="flex-col mx-4 pt-1 w-9/12">
-              <p className="text-black text-20 leading-20 font-medium">{feature.title}</p>
-              <p className="text-base leading-4 text-greyL font-normal mt-2">{feature.description}</p>
-            </div>
+        {/* First */}
+        <div className="flex my-14">
+          <div>
+            <img src={Check} alt="Check Mark" />
           </div>
-        ))}
+          <div className="flex-col mx-4 pt-1 w-9/12">
+            <p className="text-black text-20 leading-20 font-medium">
+              Seamless Search & Listing Experience
+            </p>
+            <p className="text-base leading-4 text-greyL font-normal mt-2">
+              Renters find their perfect home, and owners list properties with
+              ease—all in one platform.
+            </p>
+          </div>
+        </div>
+        {/* Second */}
+        <div className="flex my-14">
+          <div>
+            <img src={Check} alt="Check Mark" />
+          </div>
+          <div className="flex-col mx-4 pt-1 w-9/12">
+            <p className="text-black text-20 leading-20 font-medium">
+              Verified Listings & Secure Transactions
+            </p>
+            <p className="text-base leading-4 text-greyL font-normal mt-2">
+              Renters explore verified properties with confidence, while owners
+              enjoy secure payments and lease management.
+            </p>
+          </div>
+        </div>
+
+        {/* Third */}
+        <div className="flex my-14">
+          <div>
+            <img src={Check} alt="Check Mark" />
+          </div>
+          <div className="flex-col mx-4 pt-1 w-9/12">
+            <p className="text-black text-20 leading-20 font-medium">
+              24/7 Support for Renters and Owners
+            </p>
+            <p className="text-base leading-4 text-greyL font-normal mt-2">
+              Get real-time assistance for any needs—whether you’re searching
+              for a home or managing a property.
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Right Section */}
+      {/* Form Part */}
       <div className="flex-col w-55 p-10 pt-16">
         <div className="text-greyL text-base flex items-center justify-end">
           <p className="mr-1">Have an account?</p>
@@ -109,7 +134,7 @@ const Signup = () => {
             className="text-black font-medium flex items-center"
           >
             Log in
-            <img src={Log} alt="Login" className="ml-1" />
+            <img src={Log} alt="Login" className="mr-1" />
           </a>
         </div>
         <div className="text-black font-medium text-24 mt-28 mb-4 pb-3 border-b-2 w-11/12">
@@ -164,26 +189,29 @@ const Signup = () => {
             )}
           </div>
           {/* Password */}
-          <div className="flex flex-col w-full space-y-2">
-            <label className="text-13 text-greyL">Password</label>
-            <input
-              name="Password"
-              value={formData.Password}
-              onChange={handleChange}
-              placeholder="Enter your Password"
-              type="password"
-              className="bg-superLgrey h-12 rounded-xl px-5"
-            />
-            {validationErrors.Password && (
-              <p className="text-red-500 text-sm">{validationErrors.Password}</p>
-            )}
+          <div className="flex space-x-4">
+            <div className="flex flex-col w-49 space-y-2">
+              <label className="text-13 text-greyL">Password</label>
+              <input
+                name="Password"
+                value={formData.Password}
+                onChange={handleChange}
+                placeholder="Enter your Password"
+                type="password"
+                className="bg-superLgrey h-12 rounded-xl px-5"
+              />
+              {validationErrors.Password && (
+                <p className="text-red-500 text-sm">{validationErrors.Password}</p>
+              )}
+            </div>
+            {/* Toggle Switch */}
+            <div className="flex flex-col w-49 space-y-2">
+              <label className="text-13 text-greyL">What are you Looking to do?</label>
+              <ToggleSwitch
+                onChange={(type) => handleUserTypeChange(type)}
+              />
+            </div>
           </div>
-          {/* User Type Toggle */}
-          <div className="flex flex-col w-full space-y-2">
-            <label className="text-13 text-greyL">What are you Looking to do?</label>
-            <ToggleSwitch onChange={handleUserTypeChange} />
-          </div>
-          {/* Submit Button */}
           <div>
             <button
               type="submit"
