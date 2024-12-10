@@ -20,7 +20,7 @@ export const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: 'https://fortex-llc.vercel.app/profile', // Redirect to profile
+      success_url: 'https://fortex-llc.vercel.app/renter/dashboard', // Redirect to profile
       cancel_url: 'https://fortex-llc.vercel.app/cancel', // Cancel page
       metadata: {
         userId, // Pass user ID
