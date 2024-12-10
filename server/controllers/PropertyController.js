@@ -158,8 +158,8 @@ export const getRecommendations = async (req, res) => {
       }
 
       // Find 4 properties within a similar price range (+/- 20%)
-      const minPrice = price * 0.8;
-      const maxPrice = price * 1.2;
+      const minPrice = price * 0.5;
+      const maxPrice = price * 1.5;
 
       const recommendations = await Property.find({
           price: { $gte: minPrice, $lte: maxPrice },
