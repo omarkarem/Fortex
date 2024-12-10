@@ -39,57 +39,56 @@ export const createCheckoutSession = async (req, res) => {
 
 
 export const stripeWebhook = async (req, res) => {
-  const sig = req.headers['stripe-signature']; // Ensure the signature header is present
-  console.log('Received Stripe signature:', sig);
-  
+  const sig = req.headers["stripe-signature"];
   let event;
+
   try {
     event = stripe.webhooks.constructEvent(
-      req.body, // Ensure `req.body` is raw bytes
+      req.body, // Raw body
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-    console.log('Webhook verified:', event.type);
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
+    console.log("Webhook event received:", event); // Log event
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      console.log("Session object:", session);
 
-    const userId = session.metadata.userId;
-    const propertyId = session.metadata.propertyId;
-    const amount = session.amount_total / 100; // Convert cents to dollars
+      const userId = session.metadata.userId;
+      const propertyId = session.metadata.propertyId;
 
-    try {
-      // Call the new endpoint to update bookings and property tenant
-      const response = await fetch(
-        'https://fortexserver.vercel.app/user/update-bookings',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.INTERNAL_API_TOKEN}`, // Use a secure token if this is an internal request
+      try {
+        await User.findByIdAndUpdate(
+          userId,
+          {
+            $push: {
+              bookings: {
+                propertyId,
+                amount: session.amount_total / 100, // Convert to dollars
+                date: new Date(),
+              },
+            },
           },
-          body: JSON.stringify({ userId, propertyId, amount }),
-        }
-      );
+          { new: true }
+        );
 
-      if (!response.ok) {
-        const error = await response.json();
-        console.error('Error updating booking:', error.message);
-        return res.status(500).json({ error: 'Failed to process booking' });
+        await Property.findByIdAndUpdate(
+          propertyId,
+          { tenantId: userId },
+          { new: true }
+        );
+
+        console.log("User and Property successfully updated");
+        res.status(200).json({ received: true });
+      } catch (updateError) {
+        console.error("Error updating database:", updateError);
+        res.status(500).json({ error: "Failed to update database" });
       }
-
-      res.status(200).json({ received: true });
-    } catch (error) {
-      console.error('Error updating booking:', error.message);
-      res.status(500).json({ error: 'Failed to process booking' });
+    } else {
+      res.status(400).json({ error: "Unhandled event type" });
     }
-  } else {
-    res.status(400).json({ error: 'Unhandled event type' });
+  } catch (err) {
+    console.error("Webhook signature verification failed:", err.message);
+    res.status(400).send(`Webhook Error: ${err.message}`);
   }
-
-  res.json({ received: true });
 };

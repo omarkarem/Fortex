@@ -25,6 +25,11 @@ app.use(
     })
   );
 
+  app.use(
+    "/payment/webhook",
+    express.raw({ type: "application/json" }) // Add this explicitly for the webhook
+  );
+
 //Middleware
 app.use(bodyParser.json());
 
