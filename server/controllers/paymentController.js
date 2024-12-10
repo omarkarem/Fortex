@@ -39,15 +39,17 @@ export const createCheckoutSession = async (req, res) => {
 
 
 export const stripeWebhook = async (req, res) => {
-  const sig = req.headers['stripe-signature'];
+  const sig = req.headers['stripe-signature']; // Ensure the signature header is present
+  console.log('Received Stripe signature:', sig);
+  
   let event;
-
   try {
     event = stripe.webhooks.constructEvent(
-      req.body,
+      req.body, // Ensure `req.body` is raw bytes
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
+    console.log('Webhook verified:', event.type);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -88,4 +90,6 @@ export const stripeWebhook = async (req, res) => {
   } else {
     res.status(400).json({ error: 'Unhandled event type' });
   }
+
+  res.json({ received: true });
 };
