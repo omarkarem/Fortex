@@ -6,17 +6,18 @@ import Log from "../assets/ForwardButton.svg";
 import ToggleSwitch from "../Components/Switch";
 
 const Signup = () => {
-  const [validationErrors, setValidationErrors] = useState({}); // Server-side errors
+  const [validationErrors, setValidationErrors] = useState({}); // Server-side validation errors
   const [formData, setFormData] = useState({
     FirstName: "",
     LastName: "",
     Email: "",
     Password: "",
-    Type: "Owner", // Default value
+    Type: "Owner", // Default user type
   });
 
   const navigate = useNavigate();
 
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -25,6 +26,7 @@ const Signup = () => {
     }));
   };
 
+  // Handle toggle switch changes for user type
   const handleUserTypeChange = (type) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -32,6 +34,7 @@ const Signup = () => {
     }));
   };
 
+  // Submit form data
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -45,35 +48,31 @@ const Signup = () => {
           body: JSON.stringify(formData),
         }
       );
-  
+
       const data = await response.json();
-  
-      // Log the response from the server
-      console.log("Server Response:", data);
-  
+
       if (response.ok) {
         alert("User registered successfully");
         setValidationErrors({}); // Clear errors on success
         navigate("/login");
       } else {
-        // Log validation errors received from the server
+        // Log validation errors from server
         console.log("Validation Errors Received:", data.errors);
-  
-        // Map server-side validation errors
+
+        // Map validation errors to form fields
         const errorObj = {};
-        if (data.errors) {
-          data.errors.forEach((error) => {
-            errorObj[error.param] = error.msg;
-          });
-        }
-        setValidationErrors(errorObj);
+        data.errors.forEach((error) => {
+          errorObj[error.param] = error.msg;
+        });
+
+        setValidationErrors(errorObj); // Update state with errors
       }
     } catch (error) {
       console.error("Error during registration:", error);
       alert("An error occurred. Please try again.");
     }
   };
-  
+
   return (
     <section className="flex w-full h-screen font-pop">
       {/* Left Section */}
@@ -165,27 +164,26 @@ const Signup = () => {
             )}
           </div>
           {/* Password */}
-          <div className="flex space-x-4">
-            <div className="flex flex-col w-49 space-y-2">
-              <label className="text-13 text-greyL">Password</label>
-              <input
-                name="Password"
-                value={formData.Password}
-                onChange={handleChange}
-                placeholder="Enter your Password"
-                type="password"
-                className="bg-superLgrey h-12 rounded-xl px-5"
-              />
-              {validationErrors.Password && (
-                <p className="text-red-500 text-sm">{validationErrors.Password}</p>
-              )}
-            </div>
-            {/* Toggle Switch */}
-            <div className="flex flex-col w-49 space-y-2">
-              <label className="text-13 text-greyL">What are you Looking to do?</label>
-              <ToggleSwitch onChange={handleUserTypeChange} />
-            </div>
+          <div className="flex flex-col w-full space-y-2">
+            <label className="text-13 text-greyL">Password</label>
+            <input
+              name="Password"
+              value={formData.Password}
+              onChange={handleChange}
+              placeholder="Enter your Password"
+              type="password"
+              className="bg-superLgrey h-12 rounded-xl px-5"
+            />
+            {validationErrors.Password && (
+              <p className="text-red-500 text-sm">{validationErrors.Password}</p>
+            )}
           </div>
+          {/* User Type Toggle */}
+          <div className="flex flex-col w-full space-y-2">
+            <label className="text-13 text-greyL">What are you Looking to do?</label>
+            <ToggleSwitch onChange={handleUserTypeChange} />
+          </div>
+          {/* Submit Button */}
           <div>
             <button
               type="submit"
