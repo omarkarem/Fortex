@@ -7,7 +7,6 @@ import authRoutes from "./routes/authRoutes.js";
 import Property from "./models/Property.js";
 import propertyRoutes from "./routes/PropertiesRoutes.js"
 import userRoutes from "./routes/UserRoutes.js"
-import paymentRoutes from "./routes/PaymentRoutes.js"
 dotenv.config({
     path:'./config/.env'
 });
