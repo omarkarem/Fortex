@@ -9,16 +9,25 @@ const secretKey = process.env.JWT_SECRET || "Secret_key";
 // Registration
 export const register = async (req, res) => {
     const errors = validationResult(req); // Check validation errors
+  
+    // Log validation errors if any
+    console.log("Validation Errors in Register:", errors.array());
+  
     if (!errors.isEmpty()) {
-      // Return validation errors to the frontend
       return res.status(400).json({ errors: errors.array() });
     }
   
     const { FirstName, LastName, Email, Password, Type } = req.body;
+  
     try {
       const existingUser = await User.findOne({ Email });
+  
+      // Log if the email is already in use
       if (existingUser) {
-        return res.status(400).json({ errors: [{ msg: "Email already in use", param: "Email" }] });
+        console.log("Email already in use:", Email);
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "Email already in use", param: "Email" }] });
       }
   
       const hashedPassword = await bcrypt.hash(Password, 10);
@@ -29,13 +38,17 @@ export const register = async (req, res) => {
         Password: hashedPassword,
         Type,
       });
+  
       await newUser.save();
+  
+      console.log("New user registered successfully:", newUser);
+  
       res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
+      console.error("Error in Registration:", error);
       res.status(500).json({ message: "Error registering user", error });
     }
   };
-  
 
 //Loogin
 export const login = async (req,res) =>{

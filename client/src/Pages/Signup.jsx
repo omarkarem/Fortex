@@ -45,13 +45,20 @@ const Signup = () => {
           body: JSON.stringify(formData),
         }
       );
-
+  
       const data = await response.json();
+  
+      // Log the response from the server
+      console.log("Server Response:", data);
+  
       if (response.ok) {
         alert("User registered successfully");
         setValidationErrors({}); // Clear errors on success
         navigate("/login");
       } else {
+        // Log validation errors received from the server
+        console.log("Validation Errors Received:", data.errors);
+  
         // Map server-side validation errors
         const errorObj = {};
         if (data.errors) {
@@ -66,7 +73,7 @@ const Signup = () => {
       alert("An error occurred. Please try again.");
     }
   };
-
+  
   return (
     <section className="flex w-full h-screen font-pop">
       {/* Left Section */}
