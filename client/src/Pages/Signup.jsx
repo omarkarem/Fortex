@@ -49,17 +49,21 @@ const Signup = () => {
       );
 
       const data = await response.json();
+
       if (response.ok) {
         alert("User registered successfully");
+        setValidationErrors({}); // Clear errors on success
         navigate("/login");
       } else {
-        // Display validation errors
+        // Log validation errors from server
+        console.log("Validation Errors Received:", data.errors);
+
+        // Map validation errors to form fields
         const errorObj = {};
-        if (data.errors) {
-          data.errors.forEach((error) => {
-            errorObj[error.param] = error.msg; // Map field name to its error message
-          });
-        }
+        data.errors.forEach((error) => {
+          errorObj[error.param] = error.msg;
+        });
+
         setValidationErrors(errorObj); // Update state with errors
       }
     } catch (error) {
