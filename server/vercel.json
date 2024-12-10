@@ -22,7 +22,7 @@
           },
           {
             "key": "Access-Control-Allow-Methods",
-            "value": "GET, POST, PUT, DELETE, OPTIONS"
+            "value": "GET, POST, PUT, DELETE"
           },
           {
             "key": "Access-Control-Allow-Headers",
@@ -30,9 +30,10 @@
           },
           {
             "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' https://js.stripe.com https://m.stripe.network 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.stripe.com https://m.stripe.network; frame-src https://js.stripe.com; img-src 'self' data:; font-src 'self';"
+            "value": "default-src 'self'; script-src 'self' https://js.stripe.com https://m.stripe.network 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.stripe.com; frame-src https://js.stripe.com; img-src 'self' data:; font-src 'self';"
           }
         ]
       }
     ]
   }
+  
