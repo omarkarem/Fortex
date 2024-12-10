@@ -30,6 +30,11 @@ const PropertyPage = () => {
 
 
   const handleRentNow = async () => {
+    if (!user) {
+      alert("User not found. Please log in.");
+      return;
+    }
+  
     try {
       const response = await fetch(
         "https://fortexserver.vercel.app/payment/create-checkout-session",
@@ -40,7 +45,7 @@ const PropertyPage = () => {
           },
           body: JSON.stringify({
             amount: property.price * 100, // Convert to cents
-            userId: localStorage.getItem("userId"), // Get user ID from localStorage
+            userId: user._id, // Decode userId from token
             propertyId: id, // Current property ID
           }),
         }
