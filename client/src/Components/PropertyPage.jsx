@@ -31,15 +31,12 @@ const PropertyPage = () => {
 
   const handleRentNow = async () => {
     try {
-      const response = await fetch("https://fortexserver.vercel.app/payment/create-payment-intent", {
+      const response = await fetch("https://fortexserver.vercel.app/payment/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          amount: property.price * 100, // Amount in cents
-          userId: "USER_ID_HERE", // Replace with actual user ID from context or state
-        }),
+        body: JSON.stringify({ amount: property.price * 100 }), // convert price to cents
       });
   
       const data = await response.json();
@@ -48,22 +45,21 @@ const PropertyPage = () => {
         const stripe = await stripePromise;
   
         const result = await stripe.redirectToCheckout({
-          sessionId: data.clientSecret,
+          sessionId: data.sessionId, // Use sessionId here, not clientSecret
         });
   
         if (result.error) {
           alert(result.error.message);
         }
       } else {
-        alert(data.error || "Failed to initiate payment");
+        alert(data.error || "Failed to initiate checkout");
       }
     } catch (error) {
-      console.error("Error initiating payment:", error);
+      console.error("Error initiating checkout:", error);
       alert("An error occurred. Please try again.");
     }
   };
 
-  
   // Fetch property details
   useEffect(() => {
     const fetchProperty = async () => {
