@@ -7,27 +7,24 @@ import Search from "../Components/Search";
 const Properties = () => {
   const [properties, setProperties] = useState([]);
 
-  const fetchProperties = async (searchTerm = "") => {
+  const fetchProperties = async () => {
     try {
-      const response = await fetch(
-        `https://fortexserver.vercel.app/properties/all?search=${searchTerm}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
-          },
+        const response = await fetch("https://fortexserver.vercel.app/properties/all", {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch properties");
         }
-      );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch properties");
-      }
-
-      const data = await response.json();
-      setProperties(data);
+        const data = await response.json();
+        setProperties(data);
     } catch (error) {
-      console.error("Error fetching properties:", error);
+        console.error("Error fetching properties:", error);
     }
-  };
+};
 
   // Fetch all properties on page load
   useEffect(() => {

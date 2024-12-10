@@ -20,6 +20,7 @@ app.use(
       origin: ["https://fortex-llc.vercel.app"], // Replace with your frontend domain
       methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true, // Allow credentials
     })
   );
 
