@@ -7,6 +7,7 @@ const RenterProfile = ()=>{
         LastName: "",
         Email: "",
         PhoneNumber: "",
+        bookings: [],
       });
       const [email, setEmail] = useState("");
       const [phone, setPhone] = useState("");
@@ -24,9 +25,7 @@ const RenterProfile = ()=>{
     
             if (response.ok) {
               const data = await response.json();
-              setUserData(data); // Set the fetched data
-              setEmail(data.Email); // Initialize the email input
-              setPhone(data.PhoneNumber || ""); // Initialize the phone input
+              setUserData(data);
             } else {
               console.error("Failed to fetch profile data.");
             }
@@ -105,7 +104,18 @@ const RenterProfile = ()=>{
             />
           </div>
         </div>
-
+        {/*bookings*/}
+        <div>
+            <label className="block text-lg font-medium">Bookings</label>
+            <ul>
+              {userData.bookings.map((booking, index) => (
+                <li key={index} className="my-2">
+                  Property ID: {booking.propertyId}, Amount: ${booking.amount}, Date:{" "}
+                  {new Date(booking.date).toLocaleDateString()}
+                </li>
+              ))}
+            </ul>
+          </div>
         {/* Save Button */}
         <div className="mt-6 flex justify-end">
           <button
