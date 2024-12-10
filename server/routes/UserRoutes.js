@@ -1,6 +1,8 @@
 import express from "express";
-import { getUserProfile, updateEmail, deleteUser, updateUserProfile  } from "../controllers/UserController.js";
+import { getUserProfile, updateEmail, deleteUser, updateUserProfile } from "../controllers/UserController.js";
 import { authenticateToken } from "../Middleware/authMiddleware.js";
+import { body } from "express-validator";
+import validationMiddleware from "../Middleware/validationMiddleware.js";
 
 const router = express.Router();
 
@@ -8,13 +10,32 @@ const router = express.Router();
 router.get("/profile", authenticateToken, getUserProfile);
 
 // Update Email
-router.put("/update-email", authenticateToken, updateEmail);
+router.put(
+  "/update-email",
+  [
+    body("Email").isEmail().withMessage("Invalid email format"),
+  ],
+  validationMiddleware,
+  authenticateToken,
+  updateEmail
+);
 
-// Delete Account
+// Update User Profile
+router.put(
+  "/update",
+  [
+    body("Email").optional().isEmail().withMessage("Invalid email format"),
+    body("PhoneNumber")
+      .optional()
+      .isMobilePhone()
+      .withMessage("Invalid phone number format"),
+  ],
+  validationMiddleware,
+  authenticateToken,
+  updateUserProfile
+);
+
+// Delete User
 router.delete("/delete", authenticateToken, deleteUser);
-
-// PUT /user/profile - Update user profile
-router.put("/update", authenticateToken, updateUserProfile);
-
 
 export default router;

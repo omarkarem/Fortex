@@ -1,36 +1,86 @@
 import express from "express";
-import { getProperties, addProperty,getPropertyCount ,getTotalRevenue ,getPropertyById, getRecommendations, updateProperty, deleteProperty,getUserProperties } from "../controllers/PropertyController.js"
+import { body, param, query } from "express-validator";
+import {
+  getProperties,
+  addProperty,
+  getPropertyCount,
+  getTotalRevenue,
+  getPropertyById,
+  getRecommendations,
+  updateProperty,
+  deleteProperty,
+  getUserProperties,
+} from "../controllers/PropertyController.js";
 import { authenticateToken } from "../Middleware/authMiddleware.js";
+import validationMiddleware from "../Middleware/validationMiddleware.js";
 
 const router = express.Router();
 
-// GET /properties - Fetch all properties
+// Fetch all properties
 router.get("/all", getProperties);
-// Fetch recommendations
-router.get("/recommendations", getRecommendations);
 
 // Fetch single property by ID
-router.get("/:id", getPropertyById);
+router.get(
+  "/:id",
+  [
+    param("id").isMongoId().withMessage("Invalid property ID"),
+  ],
+  validationMiddleware,
+  getPropertyById
+);
 
+// Fetch recommendations
+router.get(
+  "/recommendations",
+  [
+    query("price").isFloat({ min: 0 }).withMessage("Invalid price value"),
+  ],
+  validationMiddleware,
+  getRecommendations
+);
 
-// GET /properties - Fetch all user properties
-router.get("/", authenticateToken, getUserProperties);
+// Add a new property
+router.post(
+  "/",
+  authenticateToken,
+  [
+    body("location").notEmpty().withMessage("Location is required"),
+    body("bedrooms").isInt({ min: 0 }).withMessage("Bedrooms must be a positive integer"),
+    body("bathrooms").isInt({ min: 0 }).withMessage("Bathrooms must be a positive integer"),
+    body("price").isFloat({ min: 0 }).withMessage("Price must be a positive number"),
+    body("type").isIn(["Apartment", "Villa", "Studio"]).withMessage("Invalid property type"),
+    body("size").isFloat({ min: 0 }).withMessage("Size must be a positive number"),
+  ],
+  validationMiddleware,
+  addProperty
+);
 
-// Add a new property (owner-only action)
-router.post("/", authenticateToken, addProperty);
+// Update a property
+router.put(
+  "/:id",
+  authenticateToken,
+  [
+    param("id").isMongoId().withMessage("Invalid property ID"),
+    body("location").optional().notEmpty().withMessage("Location is required"),
+    body("bedrooms").optional().isInt({ min: 0 }).withMessage("Bedrooms must be a positive integer"),
+    body("bathrooms").optional().isInt({ min: 0 }).withMessage("Bathrooms must be a positive integer"),
+    body("price").optional().isFloat({ min: 0 }).withMessage("Price must be a positive number"),
+    body("type").optional().isIn(["Apartment", "Villa", "Studio"]).withMessage("Invalid property type"),
+    body("size").optional().isFloat({ min: 0 }).withMessage("Size must be a positive number"),
+  ],
+  validationMiddleware,
+  updateProperty
+);
 
-// Get property count for the logged-in user
-router.get("/property-count", authenticateToken, getPropertyCount);
-
-// Get total revenue from properties
-router.get("/total-revenue", authenticateToken, getTotalRevenue);
-
-// Update a property (owner-only action)
-router.put("/:id", authenticateToken, updateProperty);
-
-// Delete a property (owner-only action)
-router.delete("/:id", authenticateToken, deleteProperty);
-
-
+// Delete a property
+router.delete(
+  "/:id",
+  authenticateToken,
+  [
+    param("id").isMongoId().withMessage("Invalid property ID"),
+  ],
+  validationMiddleware,
+  deleteProperty
+);
 
 export default router;
