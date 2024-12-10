@@ -17,6 +17,7 @@ const PropertyPage = () => {
     useEffect(() => {
         const fetchProperty = async () => {
           try {
+            // Fetch the main property details
             const response = await fetch(`https://fortexserver.vercel.app/properties/${id}`);
             if (!response.ok) {
               console.error("Failed to fetch property details");
@@ -25,7 +26,7 @@ const PropertyPage = () => {
             const data = await response.json();
             setProperty(data);
       
-            // Fetch recommendations
+            // Fetch recommendations based on price
             const recResponse = await fetch(
               `https://fortexserver.vercel.app/properties/recommendations?price=${data.price}`
             );
@@ -42,7 +43,7 @@ const PropertyPage = () => {
       
         fetchProperty();
       }, [id]);
-
+      
   return (
     <>
       <Header />
