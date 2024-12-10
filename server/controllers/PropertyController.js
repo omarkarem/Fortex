@@ -150,26 +150,37 @@ export const getPropertyById = async (req, res) => {
 };
 
 // Fetch recommendations based on price
+// Controller logic for getting recommendations
+import Property from "../models/Property.js";
+
 export const getRecommendations = async (req, res) => {
-  try {
-      const { price } = req.query;
+    try {
+        const { price } = req.query;
 
-      if (!price) {
-          return res.status(400).json({ message: "Price is required" });
-      }
+        // Validate the price parameter
+        if (!price) {
+            return res.status(400).json({ message: "Price query parameter is required" });
+        }
 
-      // Find properties within 20% of the given price
-      const minPrice = price * 0.8;
-      const maxPrice = price * 1.2;
+        const parsedPrice = parseFloat(price);
+        if (isNaN(parsedPrice)) {
+            return res.status(400).json({ message: "Invalid price value" });
+        }
 
-      const recommendations = await Property.find({
-          price: { $gte: minPrice, $lte: maxPrice },
-      }).limit(4); // Limit to 4 recommendations
+        // Calculate price range for recommendations (e.g., ±20% of given price)
+        const minPrice = parsedPrice * 0.8;
+        const maxPrice = parsedPrice * 1.2;
 
-      res.status(200).json(recommendations);
-  } catch (error) {
-      console.error("Error fetching recommendations:", error);
-      res.status(500).json({ message: "Error fetching recommendations", error });
-  }
+        // Fetch properties within the price range and limit to 4 results
+        const recommendations = await Property.find({
+            price: { $gte: minPrice, $lte: maxPrice },
+        }).limit(4);
+
+        res.status(200).json(recommendations);
+    } catch (error) {
+        console.error("Error fetching recommendations:", error);
+        res.status(500).json({ message: "Error fetching recommendations", error });
+    }
 };
+
 
