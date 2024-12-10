@@ -18,6 +18,7 @@ const app = express();
 
 app.use(cors({
     origin: "https://fortex-llc.vercel.app", // Frontend origin
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }));
   
