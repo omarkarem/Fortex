@@ -9,15 +9,15 @@ const Properties = () => {
   const [properties, setProperties] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch properties with optional location parameter
   const fetchProperties = async (location = "") => {
     try {
       let url = "https://fortexserver.vercel.app/properties/all";
-      
-      // If a location is provided, add a query parameter for filtering
-      if (location) {
-        url += `?location=${encodeURIComponent(location)}`;
+      if (location.trim()) {
+        // If there's a search term, use the /search endpoint
+        url = `https://fortexserver.vercel.app/properties/search?location=${encodeURIComponent(location)}`;
       }
+
+      console.log("Fetching from URL:", url); // Debug log
 
       const response = await fetch(url, {
         headers: {
@@ -30,20 +30,20 @@ const Properties = () => {
       }
 
       const data = await response.json();
+      console.log("Fetched properties:", data); // Debug log
       setProperties(data);
     } catch (error) {
       console.error("Error fetching properties:", error);
     }
   };
 
-  // Fetch all properties on initial load
   useEffect(() => {
+    // On initial load, fetch all properties (no location filter)
     fetchProperties();
   }, []);
 
-  // Handle search callback passed to the Search component
   const handleSearch = (searchTerm) => {
-    // Re-fetch properties based on the search term
+    console.log("handleSearch called with:", searchTerm); // Debug log
     fetchProperties(searchTerm);
   };
 

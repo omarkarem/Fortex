@@ -3,8 +3,9 @@ import React, { useState } from "react";
 const Search = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = () => {
+  const handleSearchClick = () => {
     if (onSearch) {
+      console.log("Searching for:", searchTerm); // Debug log
       onSearch(searchTerm);
     }
   };
@@ -19,7 +20,7 @@ const Search = ({ onSearch }) => {
         placeholder="Search for properties by location..."
       />
       <button
-        onClick={handleSearch}
+        onClick={handleSearchClick}
         className="h-12 bg-black text-white px-6 rounded-r-full"
       >
         Search
