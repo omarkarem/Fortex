@@ -1,11 +1,13 @@
 import express from "express";
-import { getProperties, addProperty,getPropertyCount ,getTotalRevenue ,getPropertyById, getRecommendations, updateProperty, deleteProperty,getUserProperties } from "../controllers/PropertyController.js"
+import { getProperties, addProperty,getPropertyCount ,getTotalRevenue ,getPropertyById, getRecommendations, updateProperty, deleteProperty,getUserProperties, searchProperties } from "../controllers/PropertyController.js"
 import { authenticateToken } from "../Middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // GET /properties - Fetch all properties
 router.get("/all", getProperties);
+
+router.get("/search", searchProperties);
 // Fetch recommendations
 router.get("/recommendations", getRecommendations);
 

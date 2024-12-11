@@ -182,3 +182,22 @@ export const getRecommendations = async (req, res) => {
 };
 
 
+// Searches properties by location
+export const searchProperties = async (req, res) => {
+  try {
+    const { location } = req.query;
+    if (!location) {
+      return res.status(400).json({ error: "Location query parameter is required." });
+    }
+
+    // Using case-insensitive partial match with regex
+    const properties = await Property.find({
+      location: { $regex: location, $options: "i" }
+    });
+
+    res.json(properties);
+  } catch (error) {
+    console.error("Error searching properties by location:", error);
+    res.status(500).json({ error: "Failed to search properties by location" });
+  }
+};

@@ -11,7 +11,6 @@ const Search = ({ onSearch }) => {
 
   return (
     <div className="flex items-center w-11/12 mx-auto my-4">
-      {/* Search Input */}
       <input
         type="text"
         value={searchTerm}
@@ -19,7 +18,6 @@ const Search = ({ onSearch }) => {
         className="w-full h-12 bg-superLgrey rounded-l-full px-4 text-sm"
         placeholder="Search for properties by location..."
       />
-      {/* Submit Button */}
       <button
         onClick={handleSearch}
         className="h-12 bg-black text-white px-6 rounded-r-full"
