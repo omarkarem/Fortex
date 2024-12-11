@@ -58,7 +58,7 @@ const DashTenant = () => {
           </div>
 
           {properties.map((property) => (
-            <div key={property._id} className="w-95 flex items-center py-2 px-4 mx-auto my-2 relative">
+            <div key={property._id} className="w-95 flex items-center justify-between py-2 px-4 mx-auto my-2 relative">
               <p className="w-56 text-14 font-normal text-black">
                 {property.location || "N/A"}
               </p>

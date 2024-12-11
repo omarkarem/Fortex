@@ -101,13 +101,13 @@ const DashHome = ()=>{
                     key={property._id}
                     className="w-95 flex items-center py-2 px-4 mx-auto my-2 rounded-xl"
                   >
-                    <p className="w-60 text-14 font-normal text-black">
+                    <p className="w-64 text-14 font-normal text-black">
                       {property.location || "N/A"}
                     </p>
-                    <p className="w-40 text-14 font-normal text-black">
+                    <p className="w-44 text-14 font-normal text-black">
                       {property.bedrooms || "N/A"}
                     </p>
-                    <p className="w-36 text-14 font-normal text-black">
+                    <p className="w-44 text-14 font-normal text-black">
                       {property.bathrooms || "N/A"}
                     </p>
                     <p className="w-48 text-14 font-normal text-black">
