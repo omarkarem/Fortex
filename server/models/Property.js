@@ -11,7 +11,7 @@ const PropertySchema = new mongoose.Schema({
   renter:{type:String, default:""},
   image: { type: String, default: "" },
   tenantId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Add this line
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
 })
 
 const Property = mongoose.model("Property", PropertySchema);

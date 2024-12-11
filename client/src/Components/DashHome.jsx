@@ -94,7 +94,6 @@ const DashHome = ()=>{
                     <p className="text-14 font-medium text-black">Bedrooms</p>
                     <p className="text-14 font-medium text-black">Bathrooms</p>
                     <p className="text-14 font-medium text-black">Total Size</p>
-                    <p className="text-14 font-medium text-black">Tenant Name</p>
                     <p className="text-14 font-medium text-black">Price/Month</p>
                 </div>
                 {userProperties.map((property) => (
@@ -113,9 +112,6 @@ const DashHome = ()=>{
                     </p>
                     <p className="w-48 text-14 font-normal text-black">
                       {property.size || "N/A"} sqft
-                    </p>
-                    <p className="w-44 text-14 font-normal text-black">
-                      {property.tenant || "N/A"}
                     </p>
                     <p className="w-16 text-14 font-normal text-black">
                       {property.price || "N/A"} $

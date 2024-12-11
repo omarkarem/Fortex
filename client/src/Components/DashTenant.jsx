@@ -53,9 +53,6 @@ const DashTenant = () => {
         <div className="w-full h-content bg-superLgrey rounded-xl my-8 pb-6">
           <div className="w-95 flex justify-between bg-white rounded-xl border-2 border-greyL py-2 px-4 mx-auto my-8">
             <p className="text-14 font-medium text-black">Property Name</p>
-            <p className="text-14 font-medium text-black">Bedrooms</p>
-            <p className="text-14 font-medium text-black">Bathrooms</p>
-            <p className="text-14 font-medium text-black">Total Size</p>
             <p className="text-14 font-medium text-black">Tenant Name</p>
             <p className="text-14 font-medium text-black mr-12">Price/Month</p>
           </div>
@@ -64,15 +61,6 @@ const DashTenant = () => {
             <div key={property._id} className="w-95 flex items-center py-2 px-4 mx-auto my-2 relative">
               <p className="w-56 text-14 font-normal text-black">
                 {property.location || "N/A"}
-              </p>
-              <p className="w-32 text-14 font-normal text-black">
-                {property.bedrooms || "N/A"}
-              </p>
-              <p className="w-44 text-14 font-normal text-black">
-                {property.bathrooms || "N/A"}
-              </p>
-              <p className="w-44 text-14 font-normal text-black">
-                {property.size || "N/A"} sqft
               </p>
               <p className="w-44 text-14 font-normal text-black">
                 {property.tenantId
