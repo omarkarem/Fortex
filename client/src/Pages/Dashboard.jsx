@@ -98,7 +98,7 @@ const Dashboard = ()=>{
             {active === "home" && <DashHome />}
             {active === "listings" && <DashListings />}
             {active === "settings" && <Settings />} 
-            {active === "tenat" && <DashTenant />}
+            {active === "tenants" && <DashTenant />}
             </div>
         </section>
     )
