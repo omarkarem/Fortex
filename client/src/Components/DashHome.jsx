@@ -104,13 +104,13 @@ const DashHome = ()=>{
                     <p className="w-64 text-14 font-normal text-black">
                       {property.location || "N/A"}
                     </p>
-                    <p className="w-44 text-14 font-normal text-black">
+                    <p className="w-52 text-14 font-normal text-black">
                       {property.bedrooms || "N/A"}
                     </p>
-                    <p className="w-44 text-14 font-normal text-black">
+                    <p className="w-60 text-14 font-normal text-black">
                       {property.bathrooms || "N/A"}
                     </p>
-                    <p className="w-48 text-14 font-normal text-black">
+                    <p className="w-52 text-14 font-normal text-black">
                       {property.size || "N/A"} sqft
                     </p>
                     <p className="w-16 text-14 font-normal text-black">
