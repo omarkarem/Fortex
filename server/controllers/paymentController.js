@@ -27,8 +27,8 @@ export const createCheckoutSession = async (req, res) => {
       success_url: 'https://fortex-llc.vercel.app/renter/dashboard', // Redirect to profile
       cancel_url: 'https://fortex-llc.vercel.app/cancel', // Cancel page
       metadata: {
-        userId, // Pass user ID
-        propertyId, // Pass property ID
+        userId,    // Pass user ID
+        propertyId // Pass property ID
       },
     });
 
@@ -38,7 +38,6 @@ export const createCheckoutSession = async (req, res) => {
     res.status(500).json({ error: 'Failed to create checkout session' });
   }
 };
-
 
 export const stripeWebhook = async (req, res) => {
   const sig = req.headers['stripe-signature'];
@@ -94,12 +93,12 @@ export const stripeWebhook = async (req, res) => {
         { new: true }
       );
 
-      res.status(200).json({ received: true });
+      return res.status(200).json({ received: true });
     } catch (error) {
       console.error('Error updating database:', error.message);
-      res.status(500).json({ error: 'Failed to process booking' });
+      return res.status(500).json({ error: 'Failed to process booking' });
     }
   } else {
-    res.status(400).json({ error: 'Unhandled event type' });
+    return res.status(400).json({ error: 'Unhandled event type' });
   }
 };

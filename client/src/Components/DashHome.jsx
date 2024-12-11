@@ -139,9 +139,6 @@ const DashHome = ()=>{
                     <button className="flex bg-transparent px-6 py-1 text-start">View your Properties<img src={arrow}></img></button>
                 </div>
             </div>
-            <div className="w-full flex justify-end my-4">
-                <button className="bg-black text-white text-16 py-2 px-8 rounded-md">Logout</button>
-            </div>
         </section>
     )
 }

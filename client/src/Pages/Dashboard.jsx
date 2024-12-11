@@ -59,9 +59,6 @@ const Dashboard = ()=>{
                 <div className={buttonClass("listings")}>
                     <button onClick={()=> setActive("listings")} className="py-3 px-4 rounded-full text-white text-18 flex felx-col"><img className="mr-2" src={listing} alt="Home"></img>My Listings</button>
                 </div>
-                <div className={buttonClass("bookings")}>
-                    <button onClick={()=> setActive("bookings")} className="py-3 px-4 rounded-full text-white text-18 flex felx-col"><img className="mr-2" src={booking} alt="Home"></img>Bookings</button>
-                </div>
                 <div className={buttonClass("tenants")}>
                     <button onClick={()=> setActive("tenants")} className="py-3 px-4 rounded-full text-white text-18 flex felx-col"><img className="mr-2" src={tenant} alt="Home"></img>Tenants</button>
                 </div>

@@ -8,8 +8,9 @@ const PropertySchema = new mongoose.Schema({
   price: { type: Number, required: true },
   type: { type: String, required: true }, 
   size: { type: Number, required: true },
+  renter:{type:String, default:""},
   image: { type: String, default: "" },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // References the user
+  tenantId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
 })
 
 const Property = mongoose.model("Property", PropertySchema);

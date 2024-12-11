@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     PhoneNumber: { type: String }, // Optional phone number field
     bookings: [
       {
-        propertyId: String,
+        propertyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Property' },
         amount: Number,
         date: Date,
       },
