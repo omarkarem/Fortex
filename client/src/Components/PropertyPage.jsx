@@ -76,9 +76,9 @@ const PropertyPage = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            amount: property.price * 100, // Convert to cents
-            userId: user.userId,         // userId from the server response
-            propertyId: id,              // Current property ID
+            amount: property.price * 100, 
+            userId: user.userId,       
+            propertyId: id,              
           }),
         }
       );

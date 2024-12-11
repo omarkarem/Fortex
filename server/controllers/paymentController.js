@@ -78,7 +78,7 @@ export const stripeWebhook = async (req, res) => {
           $push: {
             bookings: {
               propertyId,
-              amount: session.amount_total / 100, // Convert cents to dollars
+              amount: session.amount_total / 100, 
               date: new Date(),
             },
           },
@@ -86,7 +86,6 @@ export const stripeWebhook = async (req, res) => {
         { new: true }
       );
 
-      // Update property to set tenant
       await Property.findByIdAndUpdate(
         propertyId,
         { tenantId: userId }, // Link property to tenant

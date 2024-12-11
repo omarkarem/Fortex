@@ -11,11 +11,10 @@ export const getProperties = async (req,res)=>{
 };
 
 
-//fetching all properties for a user
 
 export const getUserProperties = async (req,res)=>{
     try {
-      const userId = req.user.userId; // Extract user ID from token
+      const userId = req.user.userId;
       const properties = await Property.find({ userId }); // Fetch only the user's properties
       res.status(200).json(properties);
   } catch (error) {
@@ -28,8 +27,8 @@ export const getUserProperties = async (req,res)=>{
 export const addProperty = async (req, res) => {
     const { location, bedrooms, bathrooms, price, type, size, image } = req.body;
 
-    console.log("Received Data:", req.body); // Log incoming request body
-    console.log("Authenticated User:", req.user); // Log user details from the token
+    console.log("Received Data:", req.body); 
+    console.log("Authenticated User:", req.user); 
 
     try {
         if (!req.user || !req.user.userId) {
@@ -44,13 +43,13 @@ export const addProperty = async (req, res) => {
             type,
             size,
             image,
-            userId: req.user.userId, // Make sure userId is valid and exists
+            userId: req.user.userId, 
         });
 
         await newProperty.save();
         res.status(201).json({ message: "Property added successfully", property: newProperty });
     } catch (error) {
-        console.error("Error adding property:", error); // Log detailed error for debugging
+        console.error("Error adding property:", error); 
         res.status(500).json({ message: "Error adding property", error });
     }
 };
@@ -59,8 +58,8 @@ export const addProperty = async (req, res) => {
 // Get total revenue from properties
 export const getTotalRevenue = async (req, res) => {
   try {
-    const userId = req.user.userId; // Extract user ID from token
-    const properties = await Property.find({ userId }); // Get properties for the user
+    const userId = req.user.userId; 
+    const properties = await Property.find({ userId }); 
     const totalRevenue = properties.reduce((sum, property) => sum + property.price, 0);
     res.status(200).json({ totalRevenue });
   } catch (error) {
@@ -73,7 +72,7 @@ export const getTotalRevenue = async (req, res) => {
 // Get the property count
 export const getPropertyCount = async (req, res) => {
   try {
-    const userId = req.user.userId; // Extract user ID from token
+    const userId = req.user.userId; 
     const propertyCount = await Property.countDocuments({ userId }); // Count properties
     res.status(200).json({ propertyCount });
   } catch (error) {
@@ -134,7 +133,6 @@ export const updateProperty = async (req, res) => {
   };
   
 
-// Get a single property by ID
 export const getPropertyById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -165,11 +163,11 @@ export const getRecommendations = async (req, res) => {
             return res.status(400).json({ message: "Invalid price value" });
         }
 
-        // Calculate price range for recommendations (e.g., ±20% of given price)
+        // Calculate price range for recommendations (±20% of given price)
         const minPrice = parsedPrice * 0.5;
         const maxPrice = parsedPrice * 1.5;
 
-        // Fetch properties within the price range and limit to 4 results
+        // Fetch properties within the price range 
         const recommendations = await Property.find({
             price: { $gte: minPrice, $lte: maxPrice },
         }).limit(4);
@@ -203,7 +201,6 @@ export const searchProperties = async (req, res) => {
 };
 
 
-// Fetch properties owned by the logged-in user (owner) and populate tenant details
 export const getOwnerPropertiesWithTenants = async (req, res) => {
   try {
     const userId = req.user.userId; // The owner’s user ID from the token

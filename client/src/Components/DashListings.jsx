@@ -57,8 +57,7 @@ const handleAddProperty = async (e) => {
       setAddModal(false); // Close modal
       alert("Property added successfully!");
     } else {
-      // Display validation errors
-      alert(data.message);
+       alert(data.message);
     }
   } catch (error) {
     console.error("Error adding property:", error);

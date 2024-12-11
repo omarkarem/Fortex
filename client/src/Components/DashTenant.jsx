@@ -54,7 +54,7 @@ const DashTenant = () => {
           <div className="w-95 flex justify-between bg-white rounded-xl border-2 border-greyL py-2 px-4 mx-auto my-8">
             <p className="text-14 font-medium text-black">Property Name</p>
             <p className="text-14 font-medium text-black">Tenant Name</p>
-            <p className="text-14 font-medium text-black mr-12">Price/Month</p>
+            <p className="text-14 font-medium text-black">Price/Month</p>
           </div>
 
           {properties.map((property) => (

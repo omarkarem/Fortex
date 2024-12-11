@@ -6,7 +6,6 @@ import validationMiddleware from "../Middleware/validationMiddleware.js";
 
 const router = express.Router();
 
-// Get User Profile
 router.get("/profile", authenticateToken, getUserProfile);
 
 // Update Email
@@ -20,7 +19,6 @@ router.put(
   updateEmail
 );
 
-// Update User Profile
 router.put(
   "/update",
   [

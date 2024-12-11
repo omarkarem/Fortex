@@ -24,7 +24,6 @@ export const register = async (req, res) => {
     try {
       const existingUser = await User.findOne({ Email });
   
-      // Log if the email is already in use
       if (existingUser) {
         console.log("Email already in use:", Email);
         return res

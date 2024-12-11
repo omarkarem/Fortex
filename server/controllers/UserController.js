@@ -3,7 +3,7 @@ import User from "../models/User.js";
 // Get User Profile
 export const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId); // Retrieve user ID from token
+    const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -49,12 +49,12 @@ export const deleteUser = async (req, res) => {
 // Update user profile
 export const updateUserProfile = async (req, res) => {
     try {
-      const userId = req.user.userId; // Ensure req.user.userId is correct
+      const userId = req.user.userId; 
       console.log("User ID from token:", userId);
   
       const user = await User.findById(userId);
       if (!user) {
-        console.error("User not found for ID:", userId); // Debugging
+        console.error("User not found for ID:", userId); 
         return res.status(404).json({ message: "User not found" });
       }
   
@@ -65,13 +65,13 @@ export const updateUserProfile = async (req, res) => {
   
       res.status(200).json({ message: "Profile updated successfully", user });
     } catch (error) {
-      console.error("Error updating user profile:", error); // Debugging
+      console.error("Error updating user profile:", error); 
       res.status(500).json({ message: "Failed to update profile", error });
     }
   };
 
   export const updateUserBookings = async (req, res) => {
-    const { userId, propertyId, amount } = req.body; // User, property, and payment details
+    const { userId, propertyId, amount } = req.body; 
   
     try {
       // Find the user and update their bookings
@@ -82,11 +82,11 @@ export const updateUserProfile = async (req, res) => {
             bookings: {
               propertyId,
               amount,
-              date: new Date(), // Current date
+              date: new Date(), 
             },
           },
         },
-        { new: true } // Return the updated user document
+        { new: true } 
       );
   
       if (!updatedUser) {
@@ -96,8 +96,8 @@ export const updateUserProfile = async (req, res) => {
       // Update the property with the tenant ID
       const updatedProperty = await Property.findByIdAndUpdate(
         propertyId,
-        { tenantId: userId }, // Link the tenant to the property
-        { new: true } // Return the updated property document
+        { tenantId: userId },
+        { new: true } 
       );
   
       if (!updatedProperty) {
