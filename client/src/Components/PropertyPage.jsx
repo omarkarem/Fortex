@@ -8,13 +8,9 @@ import size from "../assets/Height.svg";
 import book from "../assets/PayDate.svg";
 import Property from "../Components/Property";
 import { loadStripe } from "@stripe/stripe-js";
-import { jwtDecode } from "jwt-decode";
-
-const token = localStorage.getItem("token");
-const user = token ? jwtDecode(token) : null; // user._id should be available if your JWT has it
+import jwtDecode from "jwt-decode";
 
 const stripePromise = loadStripe("pk_test_51QUYDoIi56ujtN3BtgsB8bfJr1irDxjmCVozDTQCBW8wWNfbPVw4xMR98DmRALmYl6Y4SzIEbose0vavvm6kbPF500sNG2xJMk");
-
 
 const PropertyPage = () => {
   const { id } = useParams();
@@ -30,15 +26,29 @@ const PropertyPage = () => {
   });
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
-
+  useEffect(() => {
+    // Decode user data from token
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedUser = jwtDecode(token);
+        setUser(decodedUser); // Set the user state
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        alert("Invalid or expired token. Please log in again.");
+        setUser(null);
+      }
+    }
+  }, []);
 
   const handleRentNow = async () => {
     if (!user || !user._id) {
       alert("User not found. Please log in.");
       return;
     }
-  
+
     try {
       const response = await fetch(
         "https://fortexserver.vercel.app/payment/create-checkout-session",
@@ -49,20 +59,20 @@ const PropertyPage = () => {
           },
           body: JSON.stringify({
             amount: property.price * 100, // Convert to cents
-            userId: user._id, // Use the userId from the decoded token or whichever method you use
-            propertyId: id,
+            userId: user._id, // Use the userId from the decoded token
+            propertyId: id, // Current property ID
           }),
         }
       );
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         const stripe = await stripePromise;
         const result = await stripe.redirectToCheckout({
           sessionId: data.sessionId,
         });
-  
+
         if (result.error) {
           alert(result.error.message);
         }
@@ -79,7 +89,6 @@ const PropertyPage = () => {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        // Fetch property details
         const response = await fetch(`https://fortexserver.vercel.app/properties/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch property details");
@@ -87,7 +96,6 @@ const PropertyPage = () => {
         const data = await response.json();
         setProperty(data);
 
-        // Fetch recommendations based on property price
         const recResponse = await fetch(
           `https://fortexserver.vercel.app/properties/recommendations?price=${data.price}`
         );
@@ -99,14 +107,13 @@ const PropertyPage = () => {
       } catch (error) {
         console.error("Error fetching property or recommendations:", error);
       } finally {
-        setLoading(false); // Set loading to false after API calls
+        setLoading(false);
       }
     };
 
     fetchProperty();
   }, [id]);
 
-  // Render loading state
   if (loading) {
     return (
       <div className="text-center mt-20">
