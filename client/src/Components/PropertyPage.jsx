@@ -8,6 +8,10 @@ import size from "../assets/Height.svg";
 import book from "../assets/PayDate.svg";
 import Property from "../Components/Property";
 import { loadStripe } from "@stripe/stripe-js";
+import jwt_decode from "jwt-decode"
+
+const token = localStorage.getItem("token");
+const user = token ? jwt_decode(token) : null; // user._id should be available if your JWT has it
 
 const stripePromise = loadStripe("pk_test_51QUYDoIi56ujtN3BtgsB8bfJr1irDxjmCVozDTQCBW8wWNfbPVw4xMR98DmRALmYl6Y4SzIEbose0vavvm6kbPF500sNG2xJMk");
 
@@ -30,7 +34,7 @@ const PropertyPage = () => {
 
 
   const handleRentNow = async () => {
-    if (!user) {
+    if (!user || !user._id) {
       alert("User not found. Please log in.");
       return;
     }
@@ -45,8 +49,8 @@ const PropertyPage = () => {
           },
           body: JSON.stringify({
             amount: property.price * 100, // Convert to cents
-            userId: user._id, // Decode userId from token
-            propertyId: id, // Current property ID
+            userId: user._id, // Use the userId from the decoded token or whichever method you use
+            propertyId: id,
           }),
         }
       );
@@ -55,7 +59,6 @@ const PropertyPage = () => {
   
       if (response.ok) {
         const stripe = await stripePromise;
-  
         const result = await stripe.redirectToCheckout({
           sessionId: data.sessionId,
         });

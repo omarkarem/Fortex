@@ -39,56 +39,65 @@ export const createCheckoutSession = async (req, res) => {
 
 
 export const stripeWebhook = async (req, res) => {
-  const sig = req.headers["stripe-signature"];
+  const sig = req.headers['stripe-signature'];
   let event;
 
   try {
     event = stripe.webhooks.constructEvent(
-      req.body, // Raw body
+      req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-    console.log("Webhook event received:", event); // Log event
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
 
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-      console.log("Session object:", session);
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
 
-      const userId = session.metadata.userId;
-      const propertyId = session.metadata.propertyId;
+    const userId = session.metadata.userId;
+    const propertyId = session.metadata.propertyId;
 
-      try {
-        await User.findByIdAndUpdate(
-          userId,
-          {
-            $push: {
-              bookings: {
-                propertyId,
-                amount: session.amount_total / 100, // Convert to dollars
-                date: new Date(),
-              },
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      console.error('Invalid userId format');
+      return res.status(400).json({ error: 'Invalid userId format' });
+    }
+    if (!mongoose.Types.ObjectId.isValid(propertyId)) {
+      console.error('Invalid propertyId format');
+      return res.status(400).json({ error: 'Invalid propertyId format' });
+    }
+
+    try {
+      // Update user's bookings
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: {
+            bookings: {
+              propertyId,
+              amount: session.amount_total / 100, // Convert cents to dollars
+              date: new Date(),
             },
           },
-          { new: true }
-        );
+        },
+        { new: true }
+      );
 
-        await Property.findByIdAndUpdate(
-          propertyId,
-          { tenantId: userId },
-          { new: true }
-        );
+      // Update property to set tenant
+      await Property.findByIdAndUpdate(
+        propertyId,
+        { tenantId: userId }, // Link property to tenant
+        { new: true }
+      );
 
-        console.log("User and Property successfully updated");
-        res.status(200).json({ received: true });
-      } catch (updateError) {
-        console.error("Error updating database:", updateError);
-        res.status(500).json({ error: "Failed to update database" });
-      }
-    } else {
-      res.status(400).json({ error: "Unhandled event type" });
+      res.status(200).json({ received: true });
+    } catch (error) {
+      console.error('Error updating database:', error.message);
+      res.status(500).json({ error: 'Failed to process booking' });
     }
-  } catch (err) {
-    console.error("Webhook signature verification failed:", err.message);
-    res.status(400).send(`Webhook Error: ${err.message}`);
+  } else {
+    res.status(400).json({ error: 'Unhandled event type' });
   }
 };
