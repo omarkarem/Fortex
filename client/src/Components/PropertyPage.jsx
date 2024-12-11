@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import bed from "../assets/Bed.svg";
