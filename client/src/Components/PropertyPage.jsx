@@ -8,10 +8,10 @@ import size from "../assets/Height.svg";
 import book from "../assets/PayDate.svg";
 import Property from "../Components/Property";
 import { loadStripe } from "@stripe/stripe-js";
-import jwt_decode from "jwt-decode"
+import { jwtDecode } from "jwt-decode";
 
 const token = localStorage.getItem("token");
-const user = token ? jwt_decode(token) : null; // user._id should be available if your JWT has it
+const user = token ? jwtDecode(token) : null; // user._id should be available if your JWT has it
 
 const stripePromise = loadStripe("pk_test_51QUYDoIi56ujtN3BtgsB8bfJr1irDxjmCVozDTQCBW8wWNfbPVw4xMR98DmRALmYl6Y4SzIEbose0vavvm6kbPF500sNG2xJMk");
 
