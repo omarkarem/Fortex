@@ -45,7 +45,7 @@ const PropertyPage = () => {
   }, []);
 
   const handleRentNow = async () => {
-    if (!user || !user._id) {
+    if (!user || !user.userId) {
       alert("User not found. Please log in.");
       return;
     }
