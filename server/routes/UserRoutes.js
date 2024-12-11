@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserProfile, updateEmail, deleteUser, updateUserProfile , updateUserBookings} from "../controllers/UserController.js";
+import { getUserProfile, updateEmail, deleteUser, updateUserProfile , updateUserBookings, getAuthenticatedUser } from "../controllers/UserController.js";
 import { authenticateToken } from "../Middleware/authMiddleware.js";
 import { body } from "express-validator";
 import validationMiddleware from "../Middleware/validationMiddleware.js";
@@ -40,5 +40,9 @@ router.delete("/delete", authenticateToken, deleteUser);
 
 
 router.post('/update-bookings', authenticateToken, updateUserBookings);
+
+
+// Protected route to get authenticated user info
+router.get("/me", authenticateToken, getAuthenticatedUser);
 
 export default router;

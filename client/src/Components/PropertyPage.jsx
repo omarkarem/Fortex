@@ -8,18 +8,13 @@ import size from "../assets/Height.svg";
 import book from "../assets/PayDate.svg";
 import Property from "../Components/Property";
 import { loadStripe } from "@stripe/stripe-js";
-import { decode } from "json-web-token";
 
 const stripePromise = loadStripe("pk_test_51QUYDoIi56ujtN3BtgsB8bfJr1irDxjmCVozDTQCBW8wWNfbPVw4xMR98DmRALmYl6Y4SzIEbose0vavvm6kbPF500sNG2xJMk");
-
-// WARNING: Storing the secret key on the frontend is NOT secure.
-// This is only for demonstration. Normally, verify on the backend.
-const secretKey = "Secret_key";
 
 const PropertyPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [property, setProperty] = useState({
     location: "",
     description: "",
@@ -36,23 +31,34 @@ const PropertyPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      // Decode and verify the token using json-web-token
-      decode(secretKey, token, (err, decoded) => {
-        if (err) {
-          console.error("Error decoding token:", err);
-          alert("Invalid or expired token. Please log in again.");
-          localStorage.removeItem("token");
-          navigate("/login");
-          setUser(null);
-        } else {
-          // decoded = { header: {...}, payload: {...}, signature: "..." }
-          // The user info should be in decoded.payload
-          console.log("Decoded token:", decoded);
-          setUser(decoded.payload);
-        }
-      });
+    if (!token) {
+      alert("No token found. Please log in.");
+      navigate("/login");
+      return;
     }
+
+    // Fetch user data from the protected endpoint /user/me
+    fetch("https://fortexserver.vercel.app/user/me", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to authenticate user");
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log("User data from server:", data);
+        setUser(data);
+      })
+      .catch(error => {
+        console.error("Error fetching user data:", error);
+        alert("Invalid or expired token. Please log in again.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      });
   }, [navigate]);
 
   const handleRentNow = async () => {
@@ -71,8 +77,8 @@ const PropertyPage = () => {
           },
           body: JSON.stringify({
             amount: property.price * 100, // Convert to cents
-            userId: user.userId,
-            propertyId: id,
+            userId: user.userId,         // userId from the server response
+            propertyId: id,              // Current property ID
           }),
         }
       );

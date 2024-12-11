@@ -114,4 +114,12 @@ export const updateUserProfile = async (req, res) => {
       res.status(500).json({ error: 'Failed to update booking and property' });
     }
   };
+
+
+  export const getAuthenticatedUser = (req, res) => {
+    // req.user comes from the token payload
+    const { userId, email, type } = req.user; 
+    
+    res.json({ userId, email, type });
+  };
   
