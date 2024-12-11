@@ -1,6 +1,8 @@
 import Stripe from 'stripe';
 import User from '../models/User.js';
 import Property from '../models/Property.js';
+import mongoose from "mongoose";
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createCheckoutSession = async (req, res) => {
