@@ -127,7 +127,7 @@ const handleEdit = async (e) => {
                 <p className="text-18 leading-18 text-white ml-12 mt-1 font-extralight">Here are all your set Properties in one location</p>
             </div>
             <div className="w-full flex justify-between items-center">
-                <p className="text-26 leading-26 font-medium text-black ml-6">YourProperties</p>
+                <p className="text-26 leading-26 font-medium text-black ml-6">Your Properties</p>
                 <button onClick={() => setAddModal(true)} className="bg-black text-white px-4 py-2 rounded-md">Add Property</button>
             </div>
 

@@ -201,3 +201,19 @@ export const searchProperties = async (req, res) => {
     res.status(500).json({ error: "Failed to search properties by location" });
   }
 };
+
+
+// Fetch properties owned by the logged-in user (owner) and populate tenant details
+export const getOwnerPropertiesWithTenants = async (req, res) => {
+  try {
+    const userId = req.user.userId; // The owner’s user ID from the token
+    // Find properties where userId matches the owner, and populate tenant details
+    const properties = await Property.find({ userId })
+      .populate('tenantId', 'FirstName LastName');
+
+    res.status(200).json(properties);
+  } catch (error) {
+    console.error("Error fetching owner properties with tenants:", error);
+    res.status(500).json({ message: "Error fetching owner properties", error });
+  }
+};

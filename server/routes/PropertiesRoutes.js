@@ -1,37 +1,27 @@
 import express from "express";
-import { getProperties, addProperty,getPropertyCount ,getTotalRevenue ,getPropertyById, getRecommendations, updateProperty, deleteProperty,getUserProperties, searchProperties } from "../controllers/PropertyController.js"
+import { getProperties, addProperty,getPropertyCount ,getTotalRevenue ,getPropertyById, getRecommendations, updateProperty, deleteProperty,getUserProperties, searchProperties,getOwnerPropertiesWithTenants } from "../controllers/PropertyController.js"
 import { authenticateToken } from "../Middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// GET /properties - Fetch all properties
+router.get("/owner-with-tenants", authenticateToken, getOwnerPropertiesWithTenants);
 router.get("/all", getProperties);
-
 router.get("/search", searchProperties);
-// Fetch recommendations
 router.get("/recommendations", getRecommendations);
 
-// Fetch single property by ID
-router.get("/:id", getPropertyById);
-
-// GET /properties - Fetch all user properties
-router.get("/", authenticateToken, getUserProperties);
-
-// Add a new property (owner-only action)
-router.post("/", authenticateToken, addProperty);
-
-// Get property count for the logged-in user
+// Protected routes
 router.get("/property-count", authenticateToken, getPropertyCount);
-
-// Get total revenue from properties
 router.get("/total-revenue", authenticateToken, getTotalRevenue);
 
-// Update a property (owner-only action)
+// Fetch user properties must be after the above routes
+router.get("/", authenticateToken, getUserProperties);
+
+router.get("/:id", getPropertyById);
+
+// Add, update, delete property
+router.post("/", authenticateToken, addProperty);
 router.put("/:id", authenticateToken, updateProperty);
-
-// Delete a property (owner-only action)
 router.delete("/:id", authenticateToken, deleteProperty);
-
 
 
 export default router;

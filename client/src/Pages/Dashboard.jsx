@@ -6,6 +6,7 @@ import booking from "../assets/Booking.svg"
 import tenant from "../assets/Tenant.svg"
 import DashHome from "../Components/DashHome";
 import DashListings from "../Components/DashListings";
+import DashTenant from "../Components/DashTenant";
 import gear from "../assets/settings.svg";
 import Settings from "../Components/Settings";
 
@@ -97,6 +98,7 @@ const Dashboard = ()=>{
             {active === "home" && <DashHome />}
             {active === "listings" && <DashListings />}
             {active === "settings" && <Settings />} 
+            {active === "tenat" && <DashTenant />}
             </div>
         </section>
     )
