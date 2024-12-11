@@ -11,6 +11,7 @@ import { loadStripe } from "@stripe/stripe-js";
 const jwt_decode = require('jwt-decode');
 
 
+
 const stripePromise = loadStripe("pk_test_51QUYDoIi56ujtN3BtgsB8bfJr1irDxjmCVozDTQCBW8wWNfbPVw4xMR98DmRALmYl6Y4SzIEbose0vavvm6kbPF500sNG2xJMk");
 
 const PropertyPage = () => {
@@ -35,6 +36,7 @@ const PropertyPage = () => {
     if (token) {
       try {
         const decodedUser = jwt_decode(token);
+        console.log("Decoded user:", decodedUser); // Optional: to verify what fields are in the token
         setUser(decodedUser); // Set the user state
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -45,6 +47,7 @@ const PropertyPage = () => {
   }, []);
 
   const handleRentNow = async () => {
+    // Check for user.userId instead of user._id, based on your backend token payload
     if (!user || !user.userId) {
       alert("User not found. Please log in.");
       return;
@@ -60,8 +63,8 @@ const PropertyPage = () => {
           },
           body: JSON.stringify({
             amount: property.price * 100, // Convert to cents
-            userId: user._id, // Use the userId from the decoded token
-            propertyId: id, // Current property ID
+            userId: user.userId, // Use the userId from the decoded token
+            propertyId: id,      // Current property ID
           }),
         }
       );
