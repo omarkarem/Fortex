@@ -8,7 +8,8 @@ import size from "../assets/Height.svg";
 import book from "../assets/PayDate.svg";
 import Property from "../Components/Property";
 import { loadStripe } from "@stripe/stripe-js";
-import {jwt_decode} from "jwt-decode";
+const jwt_decode = require('jwt-decode');
+
 
 const stripePromise = loadStripe("pk_test_51QUYDoIi56ujtN3BtgsB8bfJr1irDxjmCVozDTQCBW8wWNfbPVw4xMR98DmRALmYl6Y4SzIEbose0vavvm6kbPF500sNG2xJMk");
 
