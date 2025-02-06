@@ -27,6 +27,8 @@ const RenterProfile = ()=>{
               const data = await response.json();
               console.log('Fetched User Data:', data);
               setUserData(data);
+              setEmail(data.Email); // Initialize email state
+              setPhone(data.PhoneNumber); // Initialize phone state
             } else {
               console.error("Failed to fetch profile data.");
             }
