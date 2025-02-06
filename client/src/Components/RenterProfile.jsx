@@ -1,77 +1,80 @@
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
 
-const RenterProfile = ()=>{
-    const [userData, setUserData] = useState({
-        FirstName: "",
-        LastName: "",
-        Email: "",
-        PhoneNumber: "",
-        bookings: [],
-      });
-      const [email, setEmail] = useState("");
-      const [phone, setPhone] = useState("");
-    
-      const [loading, setLoading] = useState(false); // For API calls
-    
-      useEffect(() => {
-        const fetchRenterData = async () => {
-          try {
-            const response = await fetch("https://fortexserver.vercel.app/user/profile", {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            });
-      
-            if (response.ok) {
-              const data = await response.json();
-              console.log('Fetched User Data:', data);
-              setUserData(data);
-              setEmail(data.Email); // Initialize email state
-              setPhone(data.PhoneNumber); // Initialize phone state
-            } else {
-              console.error("Failed to fetch profile data.");
-            }
-          } catch (error) {
-            console.error("Error fetching renter data:", error);
-          }
-        };
-      
-        fetchRenterData();
-      }, []);
-    
-      const handleSave = async () => {
-        setLoading(true);
-        try {
-          const response = await fetch("https://fortexserver.vercel.app/user/update", {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({ Email: email, PhoneNumber: phone }),
-          });
-    
-          if (response.ok) {
-            alert("Profile updated successfully!");
-          } else {
-            const error = await response.json();
-            console.error("Backend Error:", error);
-            alert(`Failed to update profile: ${error.message}`);
-          }
-        } catch (error) {
-          console.error("Error updating profile:", error);
-        } finally {
-          setLoading(false);
+const RenterProfile = () => {
+  const [userData, setUserData] = useState({
+    FirstName: "",
+    LastName: "",
+    Email: "",
+    PhoneNumber: "",
+    bookings: [],
+  });
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchRenterData = async () => {
+      try {
+        const response = await fetch("https://fortexserver.vercel.app/user/profile", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Fetched User Data:', data);
+          setUserData(data);
+          setEmail(data.Email); // Initialize email state
+          setPhone(data.PhoneNumber); // Initialize phone state
+        } else {
+          console.error("Failed to fetch profile data.");
         }
-      };
-    
+      } catch (error) {
+        console.error("Error fetching renter data:", error);
+      }
+    };
 
+    fetchRenterData();
+  }, []);
 
-    return(
-        <section className="w-10/12 mx-auto flex flex-col font-pop">
-            <Header />
-            <div className="mt-24 w-10/12 mx-auto">
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("https://fortexserver.vercel.app/user/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ Email: email, PhoneNumber: phone }),
+      });
+
+      if (response.ok) {
+        alert("Profile updated successfully!");
+      } else {
+        let errorMessage = "An unknown error occurred.";
+        try {
+          const error = await response.json();
+          errorMessage = error.message || errorMessage;
+        } catch (e) {
+          console.error("Failed to parse error response:", e);
+        }
+        alert(`Failed to update profile: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("An unexpected error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section className="w-10/12 mx-auto flex flex-col font-pop">
+      <Header />
+      <div className="mt-24 w-10/12 mx-auto">
         <h2 className="text-36 font-bold">Renter Profile</h2>
         <div className="mt-6 space-y-4">
           {/* Full Name */}
@@ -84,24 +87,22 @@ const RenterProfile = ()=>{
               className="w-full px-4 py-2 border rounded-lg bg-gray-100 cursor-not-allowed"
             />
           </div>
-
           {/* Email */}
           <div>
             <label className="block text-lg font-medium">Email</label>
             <input
               type="email"
-              value={userData.Email}
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg bg-white"
             />
           </div>
-
           {/* Phone Number */}
           <div>
             <label className="block text-lg font-medium">Phone Number</label>
             <input
               type="text"
-              value={userData.PhoneNumber}
+              value={phone}
               onChange={(e) => setPhone(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg bg-white"
             />
@@ -137,8 +138,8 @@ const RenterProfile = ()=>{
           </button>
         </div>
       </div>
-        </section>
-    )
-}
+    </section>
+  );
+};
 
 export default RenterProfile;
